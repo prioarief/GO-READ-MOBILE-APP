@@ -10,21 +10,22 @@ const LoginComponent = ({navigation, screenName}) => {
   const handleLogin = () => {
     setLoading(true);
     setTimeout(() => {
-      axios({
-        method: 'POST',
-        url: 'http://192.168.43.81:3000/api/auth/login',
-        data: {
-          email: user.email,
-          password: user.password,
-        },
-      })
-        .then((res) => {
-          console.log(res.data.data);
-          navigation.navigate(screenName);
-        })
-        .catch((err) => {
-          console.log(err.response.data.data);
-        });
+      navigation.replace('MainApp');
+      // axios({
+      //   method: 'POST',
+      //   url: 'http://192.168.43.81:3000/api/auth/login',
+      //   data: {
+      //     email: user.email,
+      //     password: user.password,
+      //   },
+      // })
+      //   .then((res) => {
+      //     console.log(res.data.data);
+      //     navigation.replace('MainApp');
+      //   })
+      //   .catch((err) => {
+      //     console.log(err.response.data.data);
+      //   });
       setLoading(false);
     }, 2000);
   };
@@ -61,12 +62,11 @@ const LoginComponent = ({navigation, screenName}) => {
         <Text title="" style={styles.not}>
           Not registered?
         </Text>
-        <Button
-          titleStyle={styles.button_register}
-          buttonStyle={styles.button_register}
-          title="Register"
-          onPress={() => navigation.navigate(screenName)}
-        />
+        <Text
+          style={styles.button_register}
+          onPress={() => navigation.navigate(screenName)}>
+          Register
+        </Text>
       </View>
     </>
   );
@@ -77,26 +77,21 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   button: {
-    // flex: 9,
     borderColor: 'black',
     color: 'white',
     backgroundColor: 'black',
     borderRadius: 17,
   },
   button_register: {
-    borderColor: 'black',
-    backgroundColor: '#eaeaea',
-    borderRadius: 17,
-    color: 'black',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    textDecorationLine: 'underline',
   },
   container: {
     flex: 1,
     backgroundColor: '#eaeaea',
-    // alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'rgb(17, 73, 196)',
-    // paddingTop: 50,
-    // marginTop: 150,
     padding: 70,
   },
   not: {

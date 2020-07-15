@@ -69,12 +69,11 @@ const RegisterComponent = ({navigation, screenName}) => {
         <Text title="" style={styles.not}>
           Already Account?
         </Text>
-        <Button
-          titleStyle={styles.button_register}
-          buttonStyle={styles.button_register}
-          title="Login"
-          onPress={() => navigation.navigate(screenName)}
-        />
+        <Text
+          style={styles.button_register}
+          onPress={() => navigation.navigate(screenName)}>
+          Login
+        </Text>
       </View>
     </>
   );
@@ -92,16 +91,16 @@ const styles = StyleSheet.create({
     borderRadius: 17,
   },
   button_register: {
-    borderColor: 'black',
-    backgroundColor: '#eaeaea',
-    borderRadius: 17,
-    color: 'black',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    textDecorationLine: 'underline',
   },
   container: {
     flex: 1,
     // backgroundColor: 'rgb(17, 73, 196)',
     backgroundColor: '#eaeaea',
-    paddingTop: 50,
+    // paddingTop: 50,
     justifyContent: 'center',
     // marginTop: 150,
     padding: 70,
