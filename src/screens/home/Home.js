@@ -9,8 +9,11 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import {cover} from '../../assets';
 import {Card} from '../../components';
+import {connect} from 'react-redux';
+import {tes} from '../../redux/actions/book';
 
-const Home = ({navigation}) => {
+const Home = (props) => {
+  console.log(props);
   const book = [
     {
       title: 'Dilan Dan Milea Film Bucin 1991 1',
@@ -44,9 +47,10 @@ const Home = ({navigation}) => {
               <Card
                 key={data.title}
                 title={data.title}
-                onPress={() =>
-                  navigation.navigate('Detail', {title: data.title})
-                }
+                onPress={() => {
+                  props.navigation.navigate('Detail', {title: data.title});
+                  props.dispatch(tes());
+                }}
               />
             );
           })}
@@ -56,7 +60,11 @@ const Home = ({navigation}) => {
   );
 };
 
-export default Home;
+const mapStateToProps = (state) => ({
+  test: state.book,
+});
+
+export default connect(mapStateToProps)(Home);
 
 const styles = StyleSheet.create({
   container: {
