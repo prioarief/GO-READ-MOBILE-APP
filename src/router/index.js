@@ -9,6 +9,7 @@ import {
   Home,
   History,
   Dashboard,
+  DetailBook,
 } from '../screens';
 import {BottomNavigator} from '../components';
 
@@ -49,6 +50,11 @@ const router = () => {
       <Stack.Screen
         name="Register"
         component={RegisterComponent}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Detail"
+        component={DetailBook}
         options={{headerShown: false}}
       />
       <Stack.Screen

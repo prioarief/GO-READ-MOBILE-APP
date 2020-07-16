@@ -1,19 +1,20 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {dilan} from '../../assets';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-const CardComponent = () => {
+const CardComponent = ({title, image, description, onPress}) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={dilan} style={styles.image} />
-      <View>
-        <Text style={styles.title}>Dilan Bucin 1991</Text>
+      <View style={styles.content}>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores
           dolore exercitationem
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -26,23 +27,27 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexDirection: 'row',
   },
+  content: {
+    marginBottom: 40,
+  },
   image: {
     width: 100,
-    height: 100,
+    height: 120,
     paddingBottom: 100,
     borderRadius: 15,
   },
   title: {
     paddingHorizontal: 20,
-    fontWeight: 'bold',
-    // paddingTop: 5,
+    paddingTop: 10,
     fontSize: 20,
     maxWidth: 200,
+    fontFamily: 'Rubik-Medium',
   },
   description: {
+    fontFamily: 'Rubik-Reguler',
     paddingHorizontal: 20,
     paddingTop: 5,
-    fontSize: 12,
+    fontSize: 14,
     maxWidth: 250,
   },
 });

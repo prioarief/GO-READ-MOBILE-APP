@@ -1,7 +1,5 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Card, ListItem} from 'react-native-elements';
-import {dilan} from '../../assets';
 
 const Book = () => {
   return (

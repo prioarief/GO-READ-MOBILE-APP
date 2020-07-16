@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button, Input} from 'react-native-elements';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
+// import axios from 'axios';
 
 const LoginComponent = ({navigation, screenName}) => {
   const [user, setUser] = useState({email: '', password: ''});

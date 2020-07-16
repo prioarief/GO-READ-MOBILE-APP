@@ -4,6 +4,7 @@ import LoginComponent from './auth/Login';
 import RegisterComponent from './auth/Register';
 import Home from './home/Home';
 import History from './home/History';
+import DetailBook from './home/DetailBook';
 import Dashboard from './home/Dashboard';
 
 export {
@@ -12,6 +13,7 @@ export {
   Splash,
   GetStarted,
   Home,
+  DetailBook,
   History,
   Dashboard,
 };

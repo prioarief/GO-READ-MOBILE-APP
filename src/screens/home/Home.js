@@ -10,7 +10,27 @@ import {TextInput} from 'react-native-gesture-handler';
 import {cover} from '../../assets';
 import {Card} from '../../components';
 
-const Home = () => {
+const Home = ({navigation}) => {
+  const book = [
+    {
+      title: 'Dilan Dan Milea Film Bucin 1991 1',
+    },
+    {
+      title: 'Dilan Dan Milea Film Bucin 1991 2',
+    },
+    {
+      title: 'Dilan Dan Milea Film Bucin 1991 3',
+    },
+    {
+      title: 'Dilan Dan Milea Film Bucin 1991 4',
+    },
+    {
+      title: 'Dilan Dan Milea Film Bucin 1991 5',
+    },
+    {
+      title: 'Dilan Dan Milea Film Bucin 1991 6',
+    },
+  ];
   return (
     <View style={styles.container}>
       <ImageBackground source={cover} style={styles.background}>
@@ -19,20 +39,17 @@ const Home = () => {
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.title}>Book List</Text>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {book.map((data) => {
+            return (
+              <Card
+                key={data.title}
+                title={data.title}
+                onPress={() =>
+                  navigation.navigate('Detail', {title: data.title})
+                }
+              />
+            );
+          })}
         </ScrollView>
       </View>
     </View>
@@ -45,6 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#d5d7dae0',
+    flexDirection: 'column',
   },
   content: {
     flex: 1,
@@ -53,11 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     marginTop: -20,
-  },
-  card: {
-    borderRadius: 20,
-    paddingVertical: 0,
-    // width: 500,
+    flexDirection: 'row',
   },
   title: {
     fontWeight: 'bold',
@@ -66,6 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 29,
     textAlign: 'center',
     marginBottom: 20,
+    // fontFamily: 'Rubik-Black',
   },
   background: {
     height: 170,
