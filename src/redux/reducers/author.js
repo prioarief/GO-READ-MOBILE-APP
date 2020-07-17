@@ -1,61 +1,38 @@
 const inialState = {
   value: [],
   detail: {},
-  count: 0,
-  error: null,
+  errosMsg: null,
 };
 
-const book = (state = inialState, action) => {
+const author = (state = inialState, action) => {
   switch (action.type) {
-    case 'BOOK_PENDING': {
-      // console.log(action.payload)
+    case 'AUTHOR_PENDING': {
       return {
         ...state,
-        // value: {},
+        errorMsg: null,
+        value: {},
       };
     }
-    case 'BOOK_REJECTED': {
+    case 'AUTHOR_REJECTED': {
       console.log(action.payload);
       return {
         ...state,
-        error: action.payload,
-        // value: {},
+        errorMsg: action.payload,
+        value: {},
       };
     }
-    case 'BOOK_FULFILLED': {
-      // console.log(action.payload)
+    case 'AUTHOR_FULFILLED': {
       return {
         ...state,
-        error: null,
+        errorMsg: null,
         value: action.payload.data.data,
-        count: action.payload.data.length,
       };
     }
-    case 'INSERT_PENDING': {
-      // console.log(action.payload)
-      return {
-        ...state,
-        value: {},
-      };
-    }
-    case 'INSERT_REJECTED': {
-      console.log(action.payload);
-      return {
-        ...state,
-        error: action.payload.response.data.data,
-        value: {},
-      };
-    }
-    case 'INSERT_FULFILLED': {
-      return {
-        ...state,
-        // value: action.payload.data.data,
-      };
-    }
+
     case 'DETAIL_PENDING': {
-      // console.log(action.payload)
       return {
         ...state,
+        errorMsg: null,
         value: {},
       };
     }
@@ -63,21 +40,73 @@ const book = (state = inialState, action) => {
       console.log(action.payload);
       return {
         ...state,
-        error: action.payload.response.data.data,
+        errorMsg: action.payload,
         value: {},
       };
     }
     case 'DETAIL_FULFILLED': {
       return {
-        ...state,
+        // ...state,
+
+        errorMsg: null,
+        // value: action.payload.data.data,
         detail: action.payload.data.data,
+      };
+    }
+
+    case 'INSERT_PENDING': {
+      return {
+        ...state,
+        errorMsg: null,
+        value: {},
+      };
+    }
+    case 'INSERT_REJECTED': {
+      console.log(action.payload);
+      return {
+        ...state,
+        errorMsg: action.payload,
+        // value: {},
+      };
+    }
+    case 'INSERT_FULFILLED': {
+      return {
+        ...state,
+
+        // errorMsg: null,
         // value: action.payload.data.data,
       };
     }
-    case 'DELETE_PENDING': {
-      // console.log(action.payload)
+
+    case 'EDIT_PENDING': {
       return {
         ...state,
+        errorMsg: null,
+        // value: {},
+      };
+    }
+    case 'EDIT_REJECTED': {
+      console.log(action.payload);
+      return {
+        ...state,
+        errorMsg: action.payload,
+        // value: {},
+      };
+    }
+    case 'EDIT_FULFILLED': {
+      return {
+        ...state,
+        errorMsg: null,
+
+        // errorMsg: null,
+        // value: action.payload.data.data,
+      };
+    }
+
+    case 'DELETE_PENDING': {
+      return {
+        ...state,
+        errorMsg: null,
         value: {},
       };
     }
@@ -85,35 +114,15 @@ const book = (state = inialState, action) => {
       console.log(action.payload);
       return {
         ...state,
-        error: action.payload.response.data.data,
+        errorMsg: action.payload,
         // value: {},
       };
     }
     case 'DELETE_FULFILLED': {
       return {
         ...state,
-        // value: action.payload.data.data,
-      };
-    }
 
-    case 'EDIT_PENDING': {
-      // console.log(action.payload)
-      return {
-        ...state,
-        value: {},
-      };
-    }
-    case 'EDIT_REJECTED': {
-      console.log(action.payload);
-      return {
-        ...state,
-        error: action.payload.response.data.data,
-        // value: {},
-      };
-    }
-    case 'EDIT_FULFILLED': {
-      return {
-        ...state,
+        // errorMsg: null,
         // value: action.payload.data.data,
       };
     }
@@ -124,4 +133,4 @@ const book = (state = inialState, action) => {
   }
 };
 
-export default book;
+export default author;

@@ -2,30 +2,46 @@ import React, {useState} from 'react';
 import {Button, Input} from 'react-native-elements';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import axios from 'axios';
+import axios from 'axios';
+import {Login} from '../../redux/actions/auth';
+import {connect} from 'react-redux';
 
-const LoginComponent = ({navigation, screenName}) => {
+const LoginComponent = ({navigation, screenName, dispatch}) => {
   const [user, setUser] = useState({email: '', password: ''});
   const [Loading, setLoading] = useState(false);
   const handleLogin = () => {
+    // console.log(dispatch());
+    const data = {
+      email: user.email,
+      password: user.password,
+    };
+    // console.log(data);
+    dispatch(Login(data))
+      .then((res) => {
+        console.log(res.value.status);
+        navigation.replace('MainApp');
+      })
+      .catch((err) => {
+        console.log(err.response.data.data);
+      });
+    // axios({
+    //   method: 'POST',
+    //   url: 'http://192.168.43.81:3000/api/auth/login',
+    //   data: {
+    //     email: user.email,
+    //     password: user.password,
+    //   },
+    // })
+    //   .then((res) => {
+    //     console.log(res.data.data);
+    //     // navigation.replace('MainApp');
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.response.data.data);
+    //   });
     setLoading(true);
     setTimeout(() => {
-      navigation.replace('MainApp');
-      // axios({
-      //   method: 'POST',
-      //   url: 'http://192.168.43.81:3000/api/auth/login',
-      //   data: {
-      //     email: user.email,
-      //     password: user.password,
-      //   },
-      // })
-      //   .then((res) => {
-      //     console.log(res.data.data);
-      //     navigation.replace('MainApp');
-      //   })
-      //   .catch((err) => {
-      //     console.log(err.response.data.data);
-      //   });
+      // navigation.replace('MainApp');
       setLoading(false);
     }, 2000);
   };
@@ -71,6 +87,7 @@ const LoginComponent = ({navigation, screenName}) => {
     </>
   );
 };
+// export default connect(mapStateToProps)(LoginComponent);
 
 const styles = StyleSheet.create({
   input: {
@@ -106,5 +123,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+const mapStateToProps = (state) => ({
+  book: state.book,
+});
 
-export default LoginComponent;
+export default connect(mapStateToProps)(LoginComponent);

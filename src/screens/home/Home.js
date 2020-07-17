@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -7,13 +7,17 @@ import {
   View,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
 import {cover} from '../../assets';
 import {Card} from '../../components';
-import {connect} from 'react-redux';
-import {tes} from '../../redux/actions/book';
+import {getBook} from '../../redux/actions/book';
+import Axios from 'axios';
+import {Button} from 'react-native';
 
 const Home = (props) => {
-  console.log(props);
+  // console.log(props);
+  // useEffect(() => {}, []);
+
   const book = [
     {
       title: 'Dilan Dan Milea Film Bucin 1991 1',
@@ -40,7 +44,15 @@ const Home = (props) => {
         <TextInput style={styles.search} placeholder="Book Title...." />
       </ImageBackground>
       <View style={styles.content}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <Button
+          title="Oke"
+          onPress={() => {
+            props.dispatch(getBook()).then((res) => {
+              console.log(res);
+            });
+          }}
+        />
+        {/* <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.title}>Book List</Text>
           {book.map((data) => {
             return (
@@ -49,19 +61,29 @@ const Home = (props) => {
                 title={data.title}
                 onPress={() => {
                   props.navigation.navigate('Detail', {title: data.title});
-                  props.dispatch(tes());
+                  Axios({
+                    method: 'POST',
+                    url: 'http://192.168.43.81:3000/api/books',
+                  })
+                    .then((res) => {
+                      console.log(res.data.data);
+                    })
+                    .catch((err) => {
+                      console.log(err.response.data.data);
+                    });
+                  // props.dispatch(tes());
                 }}
               />
             );
           })}
-        </ScrollView>
+        </ScrollView> */}
       </View>
     </View>
   );
 };
 
 const mapStateToProps = (state) => ({
-  test: state.book,
+  book: state.book,
 });
 
 export default connect(mapStateToProps)(Home);
