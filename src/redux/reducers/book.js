@@ -53,6 +53,7 @@ const book = (state = inialState, action) => {
       };
     }
     case 'DETAIL_PENDING': {
+      console.log('sabar');
       // console.log(action.payload)
       return {
         ...state,
@@ -60,7 +61,7 @@ const book = (state = inialState, action) => {
       };
     }
     case 'DETAIL_REJECTED': {
-      console.log(action.payload);
+      console.log('gagal');
       return {
         ...state,
         error: action.payload.response.data.data,
@@ -68,6 +69,7 @@ const book = (state = inialState, action) => {
       };
     }
     case 'DETAIL_FULFILLED': {
+      console.log('oke');
       return {
         ...state,
         detail: action.payload.data.data,

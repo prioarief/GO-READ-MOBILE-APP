@@ -24,26 +24,6 @@ const LoginComponent = ({navigation, screenName, dispatch}) => {
       .catch((err) => {
         console.log(err.response.data.data);
       });
-    // axios({
-    //   method: 'POST',
-    //   url: 'http://192.168.43.81:3000/api/auth/login',
-    //   data: {
-    //     email: user.email,
-    //     password: user.password,
-    //   },
-    // })
-    //   .then((res) => {
-    //     console.log(res.data.data);
-    //     // navigation.replace('MainApp');
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.response.data.data);
-    //   });
-    setLoading(true);
-    setTimeout(() => {
-      // navigation.replace('MainApp');
-      setLoading(false);
-    }, 2000);
   };
   return (
     <>

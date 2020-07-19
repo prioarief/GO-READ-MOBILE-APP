@@ -1,53 +1,100 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {dilan} from '../../assets';
-import {ScrollView} from 'react-native-gesture-handler';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {Component} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-elements';
+import {ScrollView} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
+import {dilan} from '../../assets';
+import {detailBook, getBook} from '../../redux/actions/book';
+import moment from 'moment';
 
-const DetailBook = (props) => {
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        <View style={styles.main}>
-          <Icon
-            name="angle-left"
-            style={styles.icon_back}
-            size={30}
-            color="black"
-            onPress={() => props.navigation.navigate('MainApp')}
-          />
-          <View style={styles.content}>
-            <Image source={dilan} style={styles.image} />
-            <Text style={styles.title}>{props.route.params.title}</Text>
-            <Text style={styles.author}>By Prio Arief Gunawan</Text>
+class DetailBook extends Component {
+  constructor(props) {
+    super(props);
+    console.log(props);
+  }
+  getDetailBook = async () => {
+    await this.props
+      .dispatch(detailBook(this.props.route.params.id))
+      .then(async () => {
+        // this.props.dispatch({type: 'BOOK'});
+        await this.props.dispatch(getBook());
+      });
+  };
+
+  componentDidMount() {
+    this.getDetailBook();
+  }
+
+  componentDidUpdate() {
+    console.log('did update');
+  }
+
+  render() {
+    return (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <View style={styles.main}>
+            <Icon
+              name="angle-left"
+              style={styles.icon_back}
+              size={30}
+              color="black"
+              onPress={() => this.props.navigation.replace('MainApp')}
+            />
+            <View style={styles.content}>
+              <Image
+                source={{
+                  uri: `http://192.168.43.81:3000/images/${this.props.book.detail[0].image}`,
+                }}
+                style={styles.image}
+              />
+              <Text style={styles.title}>
+                {this.props.book.detail[0].title}
+              </Text>
+              <Text style={styles.author}>
+                By {this.props.book.detail[0].author}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.detail}>
+            <Button
+              title="BORROW"
+              icon={<Icon name="bookmark-o" size={24} color="white" />}
+              buttonStyle={styles.button_style}
+              titleStyle={styles.button_title}
+              containerStyle={styles.button}
+            />
+            <Text style={styles.description_header}>Published At</Text>
+            <Text style={styles.description}>
+              {moment(this.props.book.detail[0].created_at).format(
+                'DD MMMM YYYY',
+              )}
+            </Text>
+            <Text style={styles.description_header}>Genre</Text>
+            <Text style={styles.description}>
+              {this.props.book.detail[0].genre}
+            </Text>
+            <Text style={styles.description_header}>Description</Text>
+            <Text style={styles.description}>
+              {this.props.book.detail[0].description}
+            </Text>
           </View>
         </View>
-        <View style={styles.detail}>
-          <Button
-            title="BORROW"
-            icon={<Icon name="bookmark-o" size={24} color="white" />}
-            buttonStyle={styles.button_style}
-            titleStyle={styles.button_title}
-            containerStyle={styles.button}
-          />
-          <Text style={styles.description_header}>Published At</Text>
-          <Text style={styles.description}>July 16th 2020</Text>
-          <Text style={styles.description_header}>Genre</Text>
-          <Text style={styles.description}>Horror</Text>
-          <Text style={styles.description_header}>Description</Text>
-          <Text style={styles.description}>
-            You asked, Font Awesome delivers with 41 shiny new icons in version
-            4.7. Want to request new icons? Here's how. Need vectors or want to
-            use on the desktop? Check the cheatsheet.{' '}
-          </Text>
-        </View>
-      </View>
-    </ScrollView>
-  );
-};
+      </ScrollView>
+    );
+  }
+}
 
-export default DetailBook;
+const mapStateToProps = (state) => ({
+  book: state.book,
+  auth: state.auth,
+});
+
+// const mapDispatchToProps = {detailBook};
+
+export default connect(mapStateToProps)(DetailBook);
 
 const styles = StyleSheet.create({
   container: {

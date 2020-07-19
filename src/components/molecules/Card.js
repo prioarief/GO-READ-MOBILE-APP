@@ -6,13 +6,10 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 const CardComponent = ({title, image, description, onPress}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={dilan} style={styles.image} />
+      <Image source={{uri: image}} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores
-          dolore exercitationem
-        </Text>
+        <Text style={styles.description}>{description}</Text>
       </View>
     </TouchableOpacity>
   );

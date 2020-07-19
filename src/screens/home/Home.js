@@ -1,4 +1,6 @@
-import React, {useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import Axios from 'axios';
+import React, {useEffect, useState, Component} from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -10,80 +12,77 @@ import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {cover} from '../../assets';
 import {Card} from '../../components';
-import {getBook} from '../../redux/actions/book';
-import Axios from 'axios';
-import {Button} from 'react-native';
+import {getBook, detailBook} from '../../redux/actions/book';
 
-const Home = (props) => {
-  // console.log(props);
-  // useEffect(() => {}, []);
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      book: this.props.book.value || [],
+    };
+  }
+  fetchBook = () => {
+    this.props
+      .dispatch(getBook())
+      .then((res) => {
+        // this.setState({book: 'res'});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  const book = [
-    {
-      title: 'Dilan Dan Milea Film Bucin 1991 1',
-    },
-    {
-      title: 'Dilan Dan Milea Film Bucin 1991 2',
-    },
-    {
-      title: 'Dilan Dan Milea Film Bucin 1991 3',
-    },
-    {
-      title: 'Dilan Dan Milea Film Bucin 1991 4',
-    },
-    {
-      title: 'Dilan Dan Milea Film Bucin 1991 5',
-    },
-    {
-      title: 'Dilan Dan Milea Film Bucin 1991 6',
-    },
-  ];
-  return (
-    <View style={styles.container}>
-      <ImageBackground source={cover} style={styles.background}>
-        <TextInput style={styles.search} placeholder="Book Title...." />
-      </ImageBackground>
-      <View style={styles.content}>
-        <Button
-          title="Oke"
-          onPress={() => {
-            props.dispatch(getBook()).then((res) => {
-              console.log(res);
-            });
-          }}
-        />
-        {/* <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>Book List</Text>
-          {book.map((data) => {
-            return (
-              <Card
-                key={data.title}
-                title={data.title}
-                onPress={() => {
-                  props.navigation.navigate('Detail', {title: data.title});
-                  Axios({
-                    method: 'POST',
-                    url: 'http://192.168.43.81:3000/api/books',
-                  })
-                    .then((res) => {
-                      console.log(res.data.data);
-                    })
-                    .catch((err) => {
-                      console.log(err.response.data.data);
-                    });
-                  // props.dispatch(tes());
-                }}
-              />
-            );
-          })}
-        </ScrollView> */}
+  componentDidMount() {
+    this.fetchBook;
+    console.log(this.state.book);
+  }
+  // useEffect(() => {
+  //   fetchBook();
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchBook();
+  // }, [props.book]);
+  render() {
+    return (
+      <View style={styles.container}>
+        <ImageBackground source={cover} style={styles.background}>
+          <TextInput style={styles.search} placeholder="Book Title...." />
+        </ImageBackground>
+        <View style={styles.content}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <Text style={styles.title}>Book List</Text>
+            {this.state.book
+              ? this.state.book.map((data) => {
+                  return (
+                    <Card
+                      key={data.title}
+                      title={data.title}
+                      description={data.description}
+                      image={`http://192.168.43.81:3000/images/${data.image}`}
+                      onPress={async () => {
+                        // await fetchDetailBook(data.id);
+                        // await fetchBook();
+                        this.props.navigation.navigate('Detail', {id: data.id});
+                        // await fetchDetailBook(data.id).then((res) => {
+                        //   console.log(res);
+                        //   fetchBook();
+                        // });
+                      }}
+                    />
+                  );
+                })
+              : null}
+          </ScrollView>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+}
 
 const mapStateToProps = (state) => ({
   book: state.book,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps)(Home);
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     // fontFamily: 'Rubik-Black',
   },
   background: {
-    height: 170,
+    height: 110,
   },
   search: {
     backgroundColor: 'white',
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     // borderWidth: 2,
     // borderColor: 'black',
-    marginLeft: 50,
-    marginTop: 70,
+    marginLeft: 30,
+    marginTop: 20,
   },
 });

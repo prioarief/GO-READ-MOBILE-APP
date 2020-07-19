@@ -2,12 +2,13 @@ import axios from 'axios';
 import {API} from '@env';
 
 export const getBook = () => {
-  // console.log(token)
+  // console.log(API);
   return {
     type: 'BOOK',
     payload: axios({
       method: 'GET',
-      url: 'http://192.168.43.81:3000/api/books',
+      url: `${API}/books`,
+      // url: 'http://192.168.43.81:3000/api/books',
     }),
   };
 };
@@ -28,16 +29,16 @@ export const insertBook = (token, data) => {
   };
 };
 
-export const detailBook = (token, id) => {
+export const detailBook = (id) => {
   // console.log(token)
   return {
     type: 'DETAIL',
     payload: axios({
       method: 'GET',
-      url: `${API}/books/${id}`,
-      headers: {
-        Authorization: token,
-      },
+      url: `http://192.168.43.81:3000/api/books/${id}`,
+      // headers: {
+      //   Authorization: token,
+      // },
     }),
   };
 };
