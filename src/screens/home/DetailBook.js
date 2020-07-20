@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import moment from 'moment';
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';

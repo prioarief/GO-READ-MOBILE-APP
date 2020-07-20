@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, ImagePropTypes} from 'react-native';
-import {Logo} from '../../assets';
+import {StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
+import {Logo} from '../../assets';
 
 class Splash extends Component {
   constructor(props) {

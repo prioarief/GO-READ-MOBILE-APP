@@ -1,14 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {Component} from 'react';
 import {
   ImageBackground,
+  Picker,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  Button,
 } from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import {SearchBar} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {cover} from '../../assets';
 import {Card} from '../../components';
@@ -20,7 +19,7 @@ class Home extends Component {
     this.state = {
       book: this.props.book.value || [],
       keyword: '',
-      sort: 'title-asc',
+      sort: 'latest',
     };
   }
   fetchBook = async (search, sort) => {
@@ -36,26 +35,24 @@ class Home extends Component {
     this.fetchBook('', this.state.sort);
   }
 
-  componentDidUpdate() {
-    console.log('update');
-  }
-
   handleSearch = () => {
-    this.fetchBook(this.state.keyword);
+    this.fetchBook(this.state.keyword).then(() => {
+      this.setState({book: this.props.book.value});
+    });
   };
   render() {
     return (
       <View style={styles.container}>
         <ImageBackground source={cover} style={styles.background}>
-          <TextInput
-            style={styles.search}
-            placeholder="Book Title...."
+          <SearchBar
+            placeholder="Type here"
+            inputContainerStyle={styles.search_input}
+            containerStyle={styles.search}
             value={this.state.keyword}
             onChangeText={(keyword) => this.setState({keyword: keyword})}
-            // onKeyPress={this.handleSearch.bind(this)}
-            // onKeyPress={({nativeEvent}) => {
-            //   console.log(nativeEvent);
-            // }}
+            lightTheme={true}
+            round={true}
+            showLoading={true}
             onBlur={() => {
               this.handleSearch();
             }}
@@ -64,7 +61,7 @@ class Home extends Component {
         <View style={styles.content}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Book List</Text>
-            <Button
+            {/* <Button
               title="SORT"
               onPress={async () => {
                 await this.setState({sort: 'title-desc'});
@@ -73,7 +70,26 @@ class Home extends Component {
                   this.setState({book: this.props.book.value});
                 });
               }}
-            />
+            /> */}
+            <View style={styles.sort}>
+              <Text style={styles.sort_header}>Sort</Text>
+              <Picker
+                mode="dropdown"
+                selectedValue={this.state.sort}
+                style={styles.sort_dropdown}
+                onValueChange={async (itemValue, itemIndex) => {
+                  await this.setState({sort: itemValue});
+                  this.fetchBook(this.state.keyword, this.state.sort).then(
+                    () => {
+                      this.setState({book: this.props.book.value});
+                    },
+                  );
+                }}>
+                <Picker.Item label="Latest" value="latest" />
+                <Picker.Item label="A-Z" value="title-asc" />
+                <Picker.Item label="Z-A" value="title-desc" />
+              </Picker>
+            </View>
             {this.state.book
               ? this.state.book.map((data) => {
                   return (
@@ -125,19 +141,34 @@ const styles = StyleSheet.create({
     fontSize: 29,
     textAlign: 'center',
     marginBottom: 20,
-    // fontFamily: 'Rubik-Black',
   },
   background: {
     height: 110,
   },
   search: {
-    backgroundColor: 'white',
+    marginTop: 10,
     width: 300,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    // borderWidth: 2,
-    // borderColor: 'black',
-    marginLeft: 30,
-    marginTop: 20,
+    marginLeft: 25,
+    backgroundColor: 'transparent',
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
   },
+  search_input: {
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+
+    elevation: 7,
+  },
+  sort: {
+    flexDirection: 'row',
+    paddingLeft: 150,
+  },
+  sort_dropdown: {height: 50, width: 140, marginLeft: 30},
+  sort_header: {marginTop: 15},
 });
