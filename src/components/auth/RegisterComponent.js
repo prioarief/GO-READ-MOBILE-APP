@@ -3,32 +3,48 @@ import {Button, Input} from 'react-native-elements';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import {Register} from '../../redux/actions/auth';
+import {connect} from 'react-redux';
 
-const RegisterComponent = ({navigation, screenName}) => {
+const RegisterComponent = ({navigation, screenName, dispatch}) => {
   const [user, setUser] = useState({email: '', password: '', name: ''});
   const [Loading, setLoading] = useState(false);
   const handleRegister = () => {
-    setLoading(true);
-    setTimeout(() => {
-      axios({
-        method: 'POST',
-        url: 'http://192.168.43.81:3000/api/auth/register',
-        data: {
-          email: user.email,
-          password: user.password,
-          name: user.name,
-          role: 2,
-        },
+    const data = {
+      email: user.email,
+      password: user.password,
+      name: user.name,
+    };
+    // console.log(data);
+    dispatch(Register(data))
+      .then((res) => {
+        console.log(res.value.status);
+        navigation.replace('Login');
       })
-        .then((res) => {
-          console.log(res.data.data);
-          navigation.navigate(screenName);
-        })
-        .catch((err) => {
-          console.log(err.response.data.data);
-        });
-      setLoading(false);
-    }, 2000);
+      .catch((err) => {
+        console.log(err.response.data.data);
+      });
+    // setLoading(true);
+    // setTimeout(() => {
+    //   axios({
+    //     method: 'POST',
+    //     url: 'http://192.168.43.81:3000/api/auth/register',
+    //     data: {
+    //       email: user.email,
+    //       name: user.password,
+    //       name: user.name,
+    //       role: 2,
+    //     },
+    //   })
+    //     .then((res) => {
+    //       console.log(res.data.data);
+    //       navigation.navigate(screenName);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err.response.data.data);
+    //     });
+    //   setLoading(false);
+    // }, 2000);
   };
   return (
     <>
@@ -118,4 +134,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterComponent;
+const mapStateToProps = (state) => ({
+  book: state.book,
+});
+export default connect(mapStateToProps)(RegisterComponent);

@@ -1,25 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import moment from 'moment';
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
-import {dilan} from '../../assets';
 import {detailBook, getBook} from '../../redux/actions/book';
-import moment from 'moment';
+import {Borrow} from '../../redux/actions/transaction';
 
 class DetailBook extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    // console.log(props);
   }
   getDetailBook = async () => {
     await this.props
-      .dispatch(detailBook(this.props.route.params.id))
+      .dispatch(
+        detailBook(this.props.auth.data.token, this.props.route.params.id),
+      )
       .then(async () => {
         // this.props.dispatch({type: 'BOOK'});
-        await this.props.dispatch(getBook());
+        await this.props.dispatch(getBook(this.props.auth.data.token));
       });
   };
 
@@ -28,10 +30,12 @@ class DetailBook extends Component {
   }
 
   componentDidUpdate() {
-    console.log('did update');
+    // console.log('did update');
   }
 
   render() {
+    const disabled =
+      this.props.book.detail[0].status === 'Borrowed' ? true : false;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
@@ -59,13 +63,29 @@ class DetailBook extends Component {
             </View>
           </View>
           <View style={styles.detail}>
-            <Button
-              title="BORROW"
-              icon={<Icon name="bookmark-o" size={24} color="white" />}
-              buttonStyle={styles.button_style}
-              titleStyle={styles.button_title}
-              containerStyle={styles.button}
-            />
+            {!disabled && (
+              <Button
+                title="BORROW"
+                icon={<Icon name="bookmark-o" size={24} color="white" />}
+                buttonStyle={styles.button_style}
+                titleStyle={styles.button_title}
+                containerStyle={styles.button}
+                onPress={async () => {
+                  await this.props
+                    .dispatch(
+                      Borrow(
+                        this.props.auth.data.token,
+                        this.props.book.detail[0].id,
+                      ),
+                    )
+                    .then((res) => {
+                      this.props.navigation.navigate('Detail', {
+                        id: this.props.book.detail[0].id,
+                      });
+                    });
+                }}
+              />
+            )}
             <Text style={styles.description_header}>Published At</Text>
             <Text style={styles.description}>
               {moment(this.props.book.detail[0].created_at).format(
@@ -167,4 +187,10 @@ const styles = StyleSheet.create({
   },
   button: {alignItems: 'center', marginTop: -40},
   button_title: {paddingLeft: 10},
+  button_disable: {
+    backgroundColor: 'red',
+    width: 250,
+    borderRadius: 10,
+    color: 'white',
+  },
 });

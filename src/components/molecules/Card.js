@@ -9,7 +9,14 @@ const CardComponent = ({title, image, description, onPress}) => {
       <Image source={{uri: image}} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.description}>
+          {description.length > 120
+            ? `${description.split(' ').join(' ').slice(0, 120)}......`
+            : `${description
+                .split(' ')
+                .join(' ')
+                .slice(0, description.length)}`}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -20,7 +27,7 @@ export default CardComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft: 40,
+    paddingLeft: 25,
     paddingVertical: 10,
     flexDirection: 'row',
   },
@@ -28,8 +35,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   image: {
-    width: 100,
-    height: 120,
+    width: 120,
+    height: 160,
     paddingBottom: 100,
     borderRadius: 15,
   },
@@ -45,6 +52,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 5,
     fontSize: 14,
-    maxWidth: 250,
+    maxWidth: 230,
   },
 });

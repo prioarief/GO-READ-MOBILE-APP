@@ -7,34 +7,34 @@ const TabItem = ({title, active, onPress, onLongPress}) => {
   const IconScreen = () => {
     if (title === 'User') {
       return active ? (
-        <Icon name="users" size={32} color="navy" />
+        <Icon name="users" size={20} color="navy" />
       ) : (
-        <Icon name="users" size={32} color="black" />
+        <Icon name="users" size={20} color="black" />
       );
     }
     if (title === 'History') {
       return active ? (
-        <Icon name="history" size={32} color="navy" />
+        <Icon name="history" size={20} color="navy" />
       ) : (
-        <Icon name="history" size={32} color="black" />
+        <Icon name="history" size={20} color="black" />
       );
     }
     if (title === 'Admin') {
       return active ? (
-        <Icon name="user-secret" size={32} color="navy" />
+        <Icon name="user-secret" size={20} color="navy" />
       ) : (
-        <Icon name="user-secret" size={32} color="black" />
+        <Icon name="user-secret" size={20} color="black" />
       );
     }
     if (title === 'Dashboard') {
       return active ? (
-        <Icon name="dashboard" size={32} color="navy" />
+        <Icon name="dashboard" size={20} color="navy" />
       ) : (
-        <Icon name="dashboard" size={32} color="black" />
+        <Icon name="dashboard" size={20} color="black" />
       );
     }
 
-    return <Icon name="home" size={32} color="black" />;
+    return <Icon name="home" size={20} color="black" />;
   };
   return (
     <TouchableOpacity

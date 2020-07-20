@@ -1,73 +1,89 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Axios from 'axios';
-import React, {useEffect, useState, Component} from 'react';
+import React, {Component} from 'react';
 import {
   ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
   View,
+  Button,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {cover} from '../../assets';
 import {Card} from '../../components';
-import {getBook, detailBook} from '../../redux/actions/book';
+import {getBook} from '../../redux/actions/book';
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       book: this.props.book.value || [],
+      keyword: '',
+      sort: 'title-asc',
     };
   }
-  fetchBook = () => {
-    this.props
-      .dispatch(getBook())
-      .then((res) => {
-        // this.setState({book: 'res'});
-      })
+  fetchBook = async (search, sort) => {
+    await this.props
+      .dispatch(getBook(this.props.auth.data.token, search, sort))
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
   };
 
   componentDidMount() {
-    this.fetchBook;
-    console.log(this.state.book);
+    this.fetchBook('', this.state.sort);
   }
-  // useEffect(() => {
-  //   fetchBook();
-  // }, []);
 
-  // useEffect(() => {
-  //   fetchBook();
-  // }, [props.book]);
+  componentDidUpdate() {
+    console.log('update');
+  }
+
+  handleSearch = () => {
+    this.fetchBook(this.state.keyword);
+  };
   render() {
     return (
       <View style={styles.container}>
         <ImageBackground source={cover} style={styles.background}>
-          <TextInput style={styles.search} placeholder="Book Title...." />
+          <TextInput
+            style={styles.search}
+            placeholder="Book Title...."
+            value={this.state.keyword}
+            onChangeText={(keyword) => this.setState({keyword: keyword})}
+            // onKeyPress={this.handleSearch.bind(this)}
+            // onKeyPress={({nativeEvent}) => {
+            //   console.log(nativeEvent);
+            // }}
+            onBlur={() => {
+              this.handleSearch();
+            }}
+          />
         </ImageBackground>
         <View style={styles.content}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Book List</Text>
+            <Button
+              title="SORT"
+              onPress={async () => {
+                await this.setState({sort: 'title-desc'});
+                this.fetchBook('', this.state.sort).then((res) => {
+                  // console.log(this.props.book.value);
+                  this.setState({book: this.props.book.value});
+                });
+              }}
+            />
             {this.state.book
               ? this.state.book.map((data) => {
                   return (
                     <Card
-                      key={data.title}
+                      key={data.id}
                       title={data.title}
                       description={data.description}
                       image={`http://192.168.43.81:3000/images/${data.image}`}
                       onPress={async () => {
-                        // await fetchDetailBook(data.id);
-                        // await fetchBook();
                         this.props.navigation.navigate('Detail', {id: data.id});
-                        // await fetchDetailBook(data.id).then((res) => {
-                        //   console.log(res);
-                        //   fetchBook();
-                        // });
                       }}
                     />
                   );

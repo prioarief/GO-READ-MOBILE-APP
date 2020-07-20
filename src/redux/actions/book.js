@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {API} from '@env';
 
-export const getBook = () => {
+export const getBook = (token, search, sort, page, by) => {
   // console.log(API);
   return {
     type: 'BOOK',
@@ -9,6 +9,16 @@ export const getBook = () => {
       method: 'GET',
       url: `${API}/books`,
       // url: 'http://192.168.43.81:3000/api/books',
+      params: {
+        search: search,
+        // show: show || 6,
+        page: page || 1,
+        sort: sort || 'latest',
+        by: by,
+      },
+      headers: {
+        Authorization: token,
+      },
     }),
   };
 };
@@ -29,16 +39,16 @@ export const insertBook = (token, data) => {
   };
 };
 
-export const detailBook = (id) => {
+export const detailBook = (token, id) => {
   // console.log(token)
   return {
     type: 'DETAIL',
     payload: axios({
       method: 'GET',
       url: `http://192.168.43.81:3000/api/books/${id}`,
-      // headers: {
-      //   Authorization: token,
-      // },
+      headers: {
+        Authorization: token,
+      },
     }),
   };
 };

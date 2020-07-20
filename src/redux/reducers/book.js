@@ -15,7 +15,7 @@ const book = (state = inialState, action) => {
       };
     }
     case 'BOOK_REJECTED': {
-      console.log(action.payload);
+      // console.log(action.payload);
       return {
         ...state,
         error: action.payload,

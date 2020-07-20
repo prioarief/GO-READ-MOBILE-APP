@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, ImagePropTypes} from 'react-native';
 import {Logo} from '../../assets';
+import {connect} from 'react-redux';
 
-export default class Splash extends Component {
+class Splash extends Component {
   constructor(props) {
     super(props);
     // this.state = {
@@ -12,6 +13,9 @@ export default class Splash extends Component {
 
   componentDidMount() {
     setTimeout(() => {
+      if (this.props.auth.data.token) {
+        return this.props.navigation.replace('MainApp');
+      }
       this.props.navigation.replace('GetStarted');
     }, 2000);
   }
@@ -23,6 +27,12 @@ export default class Splash extends Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  book: state.book,
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(Splash);
 
 const styles = StyleSheet.create({
   logo: {
