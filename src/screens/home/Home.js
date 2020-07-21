@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
+import {Picker} from '@react-native-community/picker';
 import {
   ImageBackground,
-  Picker,
   ScrollView,
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
 } from 'react-native';
-import {SearchBar} from 'react-native-elements';
+import {SearchBar, Text as Heading} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {cover} from '../../assets';
 import {Card} from '../../components';
@@ -17,14 +18,24 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      book: this.props.book.value || [],
+      book: this.props.book.value || 'Data not found',
       keyword: '',
+      page: 1,
       sort: 'latest',
+      loading: false,
     };
   }
-  fetchBook = async (search, sort) => {
+  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    // console.log(contentSize.height - paddingToBottom);
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+  fetchBook = async (search, sort, page) => {
     await this.props
-      .dispatch(getBook(this.props.auth.data.token, search, sort))
+      .dispatch(getBook(this.props.auth.data.token, search, sort, page))
       .then((res) => {})
       .catch((err) => {
         console.log(err);
@@ -59,18 +70,26 @@ class Home extends Component {
           />
         </ImageBackground>
         <View style={styles.content}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            onScroll={async ({nativeEvent}) => {
+              if (this.isCloseToBottom(nativeEvent)) {
+                // await this.setState({loading: true});
+                const data = this.state;
+                await this.setState({page: data.page + 1});
+                await console.log(data.page);
+                // await this.setState({loading: false});
+                // if (data.loading) {
+                // }
+                // setTimeout(async () => {
+                //   // this.fetchBook(data.keyword, data.sort, data.page);
+                //   // console.log('a');
+                // }, 500);
+                // console.log('bb');
+              }
+            }}
+            scrollEventThrottle={200}>
             <Text style={styles.title}>Book List</Text>
-            {/* <Button
-              title="SORT"
-              onPress={async () => {
-                await this.setState({sort: 'title-desc'});
-                this.fetchBook('', this.state.sort).then((res) => {
-                  // console.log(this.props.book.value);
-                  this.setState({book: this.props.book.value});
-                });
-              }}
-            /> */}
             <View style={styles.sort}>
               <Text style={styles.sort_header}>Sort</Text>
               <Picker
@@ -90,8 +109,9 @@ class Home extends Component {
                 <Picker.Item label="Z-A" value="title-desc" />
               </Picker>
             </View>
-            {this.state.book
-              ? this.state.book.map((data) => {
+            {this.state.book !== 'Data not found' ? (
+              this.state.book ? (
+                this.state.book.map((data) => {
                   return (
                     <Card
                       key={data.id}
@@ -104,7 +124,15 @@ class Home extends Component {
                     />
                   );
                 })
-              : null}
+              ) : null
+            ) : (
+              <Heading h4 style={styles.notfound}>
+                Not Found
+              </Heading>
+            )}
+            {this.state.loading && (
+              <ActivityIndicator size="large" color="red" />
+            )}
           </ScrollView>
         </View>
       </View>
@@ -171,4 +199,5 @@ const styles = StyleSheet.create({
   },
   sort_dropdown: {height: 50, width: 140, marginLeft: 30},
   sort_header: {marginTop: 15},
+  notfound: {textAlign: 'center', color: 'red'},
 });

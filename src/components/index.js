@@ -4,6 +4,7 @@ import BottomNavigator from './home/BottomNavigator';
 import TabItem from './home/TabItem';
 import Book from './home/Book';
 import Card from './molecules/Card';
+import ListHistory from './molecules/ListHistory';
 
 export {
   LoginComponent,
@@ -12,4 +13,5 @@ export {
   TabItem,
   Book,
   Card,
+  ListHistory,
 };

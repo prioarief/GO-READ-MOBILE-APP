@@ -10,6 +10,7 @@ import {
   History,
   Dashboard,
   DetailBook,
+  UserProfile,
 } from '../screens';
 import {BottomNavigator} from '../components';
 
@@ -21,10 +22,10 @@ const MainApp = () => {
   return (
     <Tab.Navigator
       tabBar={(props) => <BottomNavigator {...props} key={props} />}>
-      <Tab.Screen name="User" component={Home} />
-      <Tab.Screen name="Admin" component={Home} />
-      <Tab.Screen name="History" component={History} />
-      {Admin && <Tab.Screen name="Dashboard" component={Dashboard} />}
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Search" component={History} />
+      <Tab.Screen name="Profile" component={UserProfile} />
+      {/* {Admin && <Tab.Screen name="Dashboard" component={Dashboard} />} */}
     </Tab.Navigator>
   );
 };
@@ -36,6 +37,11 @@ const router = () => {
         name="Welcome"
         component={Splash}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="History"
+        component={History}
+        // options={{headerShown: false}}
       />
       <Stack.Screen
         name="GetStarted"

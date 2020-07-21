@@ -1,4 +1,3 @@
-import moment from 'moment';
 import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-elements';
@@ -7,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {detailBook, getBook} from '../../redux/actions/book';
 import {Borrow} from '../../redux/actions/transaction';
+import Date from '../../utils/Date';
 
 class DetailBook extends Component {
   constructor(props) {
@@ -26,10 +26,6 @@ class DetailBook extends Component {
 
   componentDidMount() {
     this.getDetailBook();
-  }
-
-  componentDidUpdate() {
-    // console.log('did update');
   }
 
   render() {
@@ -87,9 +83,8 @@ class DetailBook extends Component {
             )}
             <Text style={styles.description_header}>Published At</Text>
             <Text style={styles.description}>
-              {moment(this.props.book.detail[0].created_at).format(
-                'DD MMMM YYYY',
-              )}
+              {Date(this.props.book.detail[0].created_at)}
+              {/* {console.log(Date(this.props.book.detail[0].created_at))} */}
             </Text>
             <Text style={styles.description_header}>Genre</Text>
             <Text style={styles.description}>

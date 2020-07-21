@@ -12,11 +12,11 @@ const TabItem = ({title, active, onPress, onLongPress}) => {
         <Icon name="users" size={20} color="black" />
       );
     }
-    if (title === 'History') {
+    if (title === 'Search') {
       return active ? (
-        <Icon name="history" size={20} color="navy" />
+        <Icon name="search" size={20} color="navy" />
       ) : (
-        <Icon name="history" size={20} color="black" />
+        <Icon name="search" size={20} color="black" />
       );
     }
     if (title === 'Admin') {
@@ -31,6 +31,13 @@ const TabItem = ({title, active, onPress, onLongPress}) => {
         <Icon name="dashboard" size={20} color="navy" />
       ) : (
         <Icon name="dashboard" size={20} color="black" />
+      );
+    }
+    if (title === 'Profile') {
+      return active ? (
+        <Icon name="user-circle" size={20} color="navy" />
+      ) : (
+        <Icon name="user-circle" size={20} color="black" />
       );
     }
 
