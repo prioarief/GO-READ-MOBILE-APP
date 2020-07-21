@@ -11,26 +11,33 @@ import Date from '../../utils/Date';
 class DetailBook extends Component {
   constructor(props) {
     super(props);
-    // console.log(props);
+    this.state = {
+      book: [],
+      disable: true,
+    };
   }
   getDetailBook = async () => {
-    await this.props
-      .dispatch(
-        detailBook(this.props.auth.data.token, this.props.route.params.id),
-      )
-      .then(async () => {
-        // this.props.dispatch({type: 'BOOK'});
-        await this.props.dispatch(getBook(this.props.auth.data.token));
-      });
+    const data = this.props.book.value;
+    const filterData = data.filter((e) => {
+      return e.id === this.props.route.params.id;
+    });
+
+    await this.setState({book: filterData[0]});
   };
 
-  componentDidMount() {
-    this.getDetailBook();
+  setDisable = async () => {
+    if (this.state.book.status === 'Available') {
+      return await this.setState({disable: false});
+    }
+  };
+
+  async componentDidMount() {
+    await this.getDetailBook();
+    await this.setDisable();
+    console.log(this.state.book.status);
   }
 
   render() {
-    const disabled =
-      this.props.book.detail[0].status === 'Borrowed' ? true : false;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
@@ -45,20 +52,16 @@ class DetailBook extends Component {
             <View style={styles.content}>
               <Image
                 source={{
-                  uri: `http://192.168.43.81:3000/images/${this.props.book.detail[0].image}`,
+                  uri: `http://192.168.43.81:3000/images/${this.state.book.image}`,
                 }}
                 style={styles.image}
               />
-              <Text style={styles.title}>
-                {this.props.book.detail[0].title}
-              </Text>
-              <Text style={styles.author}>
-                By {this.props.book.detail[0].author}
-              </Text>
+              <Text style={styles.title}>{this.state.book.title}</Text>
+              <Text style={styles.author}>By {this.state.book.author}</Text>
             </View>
           </View>
           <View style={styles.detail}>
-            {!disabled && (
+            {!this.state.disable && (
               <Button
                 title="BORROW"
                 icon={<Icon name="bookmark-o" size={24} color="white" />}
@@ -68,14 +71,11 @@ class DetailBook extends Component {
                 onPress={async () => {
                   await this.props
                     .dispatch(
-                      Borrow(
-                        this.props.auth.data.token,
-                        this.props.book.detail[0].id,
-                      ),
+                      Borrow(this.props.auth.data.token, this.state.book[0].id),
                     )
                     .then((res) => {
                       this.props.navigation.navigate('Detail', {
-                        id: this.props.book.detail[0].id,
+                        id: this.state.book.id,
                       });
                     });
                 }}
@@ -83,16 +83,13 @@ class DetailBook extends Component {
             )}
             <Text style={styles.description_header}>Published At</Text>
             <Text style={styles.description}>
-              {Date(this.props.book.detail[0].created_at)}
-              {/* {console.log(Date(this.props.book.detail[0].created_at))} */}
+              {Date(this.state.book.created_at)}
             </Text>
             <Text style={styles.description_header}>Genre</Text>
-            <Text style={styles.description}>
-              {this.props.book.detail[0].genre}
-            </Text>
+            <Text style={styles.description}>{this.state.book.genre}</Text>
             <Text style={styles.description_header}>Description</Text>
             <Text style={styles.description}>
-              {this.props.book.detail[0].description}
+              {this.state.book.description}
             </Text>
           </View>
         </View>

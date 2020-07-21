@@ -1,10 +1,9 @@
-import React, {Component} from 'react';
-import {Text, StyleSheet, View, Image} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {dilan} from '../../assets';
+import React from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-elements';
+import Date from '../../utils/Date';
 
-const ListHistory = ({onPress, title, borrowed, returned}) => {
+const ListHistory = ({onPress, title, borrowed, returned, image}) => {
   const Content = ({status}) => {
     if (status === null) {
       return (
@@ -22,18 +21,23 @@ const ListHistory = ({onPress, title, borrowed, returned}) => {
       return (
         <>
           <Text style={styles.header}>Date of return</Text>
-          <Text style={styles.desc}>{status}</Text>
+          <Text style={styles.desc}>{Date(status)}</Text>
         </>
       );
     }
   };
   return (
     <View style={styles.container}>
-      <Image source={dilan} style={styles.img} />
+      <Image
+        source={{
+          uri: `http://192.168.43.81:3000/images/${image}`,
+        }}
+        style={styles.img}
+      />
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.header}>Date of loan</Text>
-        <Text style={styles.desc}>{borrowed}</Text>
+        <Text style={styles.desc}>{Date(borrowed)}</Text>
         <Content status={returned} />
       </View>
     </View>

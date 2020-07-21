@@ -36,14 +36,16 @@ class Home extends Component {
   fetchBook = async (search, sort, page) => {
     await this.props
       .dispatch(getBook(this.props.auth.data.token, search, sort, page))
-      .then((res) => {})
+      .then((res) => {
+        this.setState({book: this.props.book.value});
+      })
       .catch((err) => {
         console.log(err);
       });
   };
 
   componentDidMount() {
-    this.fetchBook('', this.state.sort);
+    this.fetchBook();
   }
 
   handleSearch = () => {

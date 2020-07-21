@@ -1,21 +1,34 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
-import {getBook} from '../../redux/actions/book';
+import {getHistory, Return} from '../../redux/actions/transaction';
 import {ListHistory} from '../../components';
 
 class History extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      book: this.props.book.value || [],
+      book: this.props.transaction.history || [],
+      token: this.props.auth.data.token,
     };
   }
   fetchHistory = () => {
     this.props
-      .dispatch(getBook())
+      .dispatch(getHistory(this.state.token))
       .then((res) => {
-        // this.setState({book: 'res'});
+        this.setState({book: this.props.transaction.history});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  handleReturn = async (id) => {
+    await this.props
+      .dispatch(Return(this.state.token, id))
+      .then(async (res) => {
+        await this.fetchHistory();
+        // this.setState({book: this.props.transaction.history});
       })
       .catch((err) => {
         console.log(err);
@@ -24,7 +37,6 @@ class History extends Component {
 
   componentDidMount() {
     this.fetchHistory();
-    console.log(this.state.book);
   }
   render() {
     return (
@@ -32,47 +44,20 @@ class History extends Component {
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.title}>Borrow History</Text>
           <View style={styles.content}>
-            <ListHistory
-              title="Dilan"
-              borrowed="20 July 2021"
-              returned="20 Agustus 2021"
-            />
-            <ListHistory
-              title="Dilan"
-              status="Borrowed"
-              borrowed="20 July 2021"
-              returned="20 Agustus 2021"
-            />
-            <ListHistory
-              title="Dilan"
-              status="Borrowed"
-              borrowed="20 July 2021"
-              returned="20 Agustus 2021"
-            />
-            <ListHistory
-              title="Dilan"
-              status="Borrowed"
-              borrowed="20 July 2021"
-              returned="20 Agustus 2021"
-            />
-            <ListHistory
-              title="Dilan"
-              status="Borrowed"
-              borrowed="20 July 2021"
-              returned={null}
-            />
-            <ListHistory
-              title="Dilan"
-              status="Borrowed"
-              borrowed="20 July 2021"
-              returned={null}
-            />
-            <ListHistory
-              title="Dilan"
-              status="Borrowed"
-              borrowed="20 July 2021"
-              returned={null}
-            />
+            {this.state.book.map((data) => {
+              return (
+                <ListHistory
+                  key={data.id}
+                  title={data.title}
+                  borrowed={data.borrowed_at}
+                  returned={data.returned_at}
+                  image={data.image}
+                  onPress={() => {
+                    this.handleReturn(data.id);
+                  }}
+                />
+              );
+            })}
           </View>
         </ScrollView>
       </View>
@@ -83,6 +68,7 @@ class History extends Component {
 const mapStateToProps = (state) => ({
   book: state.book,
   auth: state.auth,
+  transaction: state.transaction,
 });
 
 export default connect(mapStateToProps)(History);
