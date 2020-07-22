@@ -20,18 +20,24 @@ class History extends Component {
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status === 401) {
+          this.props.navigation.replace('Login');
+        }
       });
   };
 
   handleReturn = async (id) => {
     await this.props
       .dispatch(Return(this.state.token, id))
-      .then(async (res) => {
-        await this.fetchHistory();
+      .then((res) => {
+        this.fetchHistory();
         // this.setState({book: this.props.transaction.history});
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status === 401) {
+          this.props.navigation.replace('Login');
+        }
       });
   };
 

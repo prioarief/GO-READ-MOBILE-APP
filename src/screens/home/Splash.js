@@ -14,7 +14,9 @@ class Splash extends Component {
   componentDidMount() {
     setTimeout(() => {
       if (this.props.auth.data.token) {
-        return this.props.navigation.replace('MainApp');
+        return this.props.navigation.replace('MainApp', {
+          role: this.props.auth.data.role,
+        });
       }
       this.props.navigation.replace('GetStarted');
     }, 2000);
@@ -40,12 +42,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  getStarted: {
-    marginTop: 40,
-    backgroundColor: '#26C6DA',
-    paddingHorizontal: 40,
-    borderRadius: 15,
-    // transform: '1s',
   },
 });

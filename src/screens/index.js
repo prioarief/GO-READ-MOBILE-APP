@@ -7,6 +7,7 @@ import History from './home/History';
 import DetailBook from './home/DetailBook';
 import Dashboard from './home/Dashboard';
 import UserProfile from './home/UserProfile';
+import Manage from './home/Manage';
 
 export {
   LoginComponent,
@@ -18,4 +19,5 @@ export {
   History,
   Dashboard,
   UserProfile,
+  Manage,
 };

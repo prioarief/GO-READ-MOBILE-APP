@@ -11,28 +11,33 @@ import {
   Dashboard,
   DetailBook,
   UserProfile,
+  Manage,
 } from '../screens';
-import {BottomNavigator} from '../components';
+import {BottomNavigator, FormData} from '../components';
+import {connect} from 'react-redux';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainApp = () => {
-  const [Admin] = useState(true);
-  return (
-    <Tab.Navigator
-      tabBar={(props) => <BottomNavigator {...props} key={props} />}>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Search" component={History} />
-      <Tab.Screen name="Profile" component={UserProfile} />
-      {/* {Admin && <Tab.Screen name="Dashboard" component={Dashboard} />} */}
-    </Tab.Navigator>
-  );
-};
+const router = (props) => {
+  const MainApp = () => {
+    return (
+      <Tab.Navigator
+        tabBar={(data) => <BottomNavigator {...data} key={data} />}>
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="Search" component={History} />
+        {props.auth.data.role === 'Admin' && (
+          <Tab.Screen name="Dashboard" component={Dashboard} />
+        )}
+        {props.auth.data.role === 'User' && (
+          <Tab.Screen name="Profile" component={UserProfile} />
+        )}
+      </Tab.Navigator>
+    );
+  };
 
-const router = () => {
   return (
-    <Stack.Navigator initialRouteName="Welcome">
+    <Stack.Navigator initialRouteName="MainApp">
       <Stack.Screen
         name="Welcome"
         component={Splash}
@@ -41,6 +46,16 @@ const router = () => {
       <Stack.Screen
         name="History"
         component={History}
+        // options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Manage Data"
+        component={Manage}
+        // options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FormData"
+        component={FormData}
         // options={{headerShown: false}}
       />
       <Stack.Screen
@@ -72,4 +87,8 @@ const router = () => {
   );
 };
 
-export default router;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(router);

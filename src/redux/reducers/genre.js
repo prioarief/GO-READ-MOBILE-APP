@@ -101,6 +101,27 @@ const genre = (state = inialState, action) => {
         // value: action.payload.data.data,
       };
     }
+    case 'EDIT_PENDING': {
+      return {
+        ...state,
+        errorMsg: null,
+        value: {},
+      };
+    }
+    case 'EDIT_REJECTED': {
+      console.log(action.payload);
+      return {
+        ...state,
+        errorMsg: action.payload,
+      };
+    }
+    case 'EDIT_FULFILLED': {
+      return {
+        ...state,
+        errorMsg: null,
+        // value: action.payload.data.data,
+      };
+    }
 
     default: {
       return state;

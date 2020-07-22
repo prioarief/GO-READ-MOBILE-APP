@@ -13,6 +13,8 @@ import {connect} from 'react-redux';
 import {cover} from '../../assets';
 import {Card} from '../../components';
 import {getBook} from '../../redux/actions/book';
+import {getAuthor} from '../../redux/actions/author';
+import {getGenre} from '../../redux/actions/genre';
 
 class Home extends Component {
   constructor(props) {
@@ -27,7 +29,6 @@ class Home extends Component {
   }
   isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
-    // console.log(contentSize.height - paddingToBottom);
     return (
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom
@@ -40,13 +41,50 @@ class Home extends Component {
         this.setState({book: this.props.book.value});
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status === 401) {
+          this.props.navigation.replace('Login');
+        }
       });
   };
 
-  componentDidMount() {
-    this.fetchBook();
+  fetchAuthor = async () => {
+    await this.props
+      .dispatch(getAuthor(this.props.auth.data.token))
+      .then((res) => {
+        this.setState({book: this.props.book.value});
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          this.props.navigation.replace('Login');
+        }
+      });
+  };
+
+  fetchGenre = async () => {
+    await this.props
+      .dispatch(getGenre(this.props.auth.data.token))
+      .then((res) => {
+        this.setState({book: this.props.book.value});
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          this.props.navigation.replace('Login');
+        }
+      });
+  };
+
+  async componentDidMount() {
+    await this.fetchBook();
+    await this.fetchGenre();
+    await this.fetchAuthor();
   }
+
+  handleSort = async (itemValue) => {
+    await this.setState({sort: itemValue});
+    this.fetchBook(this.state.keyword, this.state.sort).then(() => {
+      this.setState({book: this.props.book.value});
+    });
+  };
 
   handleSearch = () => {
     this.fetchBook(this.state.keyword).then(() => {
@@ -76,18 +114,7 @@ class Home extends Component {
             showsVerticalScrollIndicator={false}
             onScroll={async ({nativeEvent}) => {
               if (this.isCloseToBottom(nativeEvent)) {
-                // await this.setState({loading: true});
-                const data = this.state;
-                await this.setState({page: data.page + 1});
-                await console.log(data.page);
-                // await this.setState({loading: false});
-                // if (data.loading) {
-                // }
-                // setTimeout(async () => {
-                //   // this.fetchBook(data.keyword, data.sort, data.page);
-                //   // console.log('a');
-                // }, 500);
-                // console.log('bb');
+                // await this.setState({loading: true}
               }
             }}
             scrollEventThrottle={200}>
@@ -98,14 +125,9 @@ class Home extends Component {
                 mode="dropdown"
                 selectedValue={this.state.sort}
                 style={styles.sort_dropdown}
-                onValueChange={async (itemValue, itemIndex) => {
-                  await this.setState({sort: itemValue});
-                  this.fetchBook(this.state.keyword, this.state.sort).then(
-                    () => {
-                      this.setState({book: this.props.book.value});
-                    },
-                  );
-                }}>
+                onValueChange={(itemValue, itemIndex) =>
+                  this.handleSort(itemValue)
+                }>
                 <Picker.Item label="Latest" value="latest" />
                 <Picker.Item label="A-Z" value="title-asc" />
                 <Picker.Item label="Z-A" value="title-desc" />

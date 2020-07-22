@@ -4,8 +4,8 @@ import {Button} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
-import {detailBook, getBook} from '../../redux/actions/book';
 import {Borrow} from '../../redux/actions/transaction';
+import {getBook} from '../../redux/actions/book';
 import Date from '../../utils/Date';
 
 class DetailBook extends Component {
@@ -25,8 +25,22 @@ class DetailBook extends Component {
     await this.setState({book: filterData[0]});
   };
 
+  handleBorrow = async (id) => {
+    await this.props
+      .dispatch(Borrow(this.props.auth.data.token, id))
+      .then(async (res) => {
+        await this.props.dispatch(getBook(this.props.auth.data.token));
+        await this.getDetailBook();
+        await this.setDisable();
+        this.props.navigation.navigate('MainApp');
+      });
+  };
+
   setDisable = async () => {
-    if (this.state.book.status === 'Available') {
+    if (
+      this.state.book.status === 'Available' &&
+      this.props.auth.data.role === 'User'
+    ) {
       return await this.setState({disable: false});
     }
   };
@@ -34,7 +48,6 @@ class DetailBook extends Component {
   async componentDidMount() {
     await this.getDetailBook();
     await this.setDisable();
-    console.log(this.state.book.status);
   }
 
   render() {
@@ -69,15 +82,7 @@ class DetailBook extends Component {
                 titleStyle={styles.button_title}
                 containerStyle={styles.button}
                 onPress={async () => {
-                  await this.props
-                    .dispatch(
-                      Borrow(this.props.auth.data.token, this.state.book[0].id),
-                    )
-                    .then((res) => {
-                      this.props.navigation.navigate('Detail', {
-                        id: this.state.book.id,
-                      });
-                    });
+                  this.handleBorrow(this.state.book.id);
                 }}
               />
             )}
