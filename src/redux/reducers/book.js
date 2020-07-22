@@ -109,7 +109,7 @@ const book = (state = inialState, action) => {
       console.log(action.payload);
       return {
         ...state,
-        error: action.payload.response.data.data,
+        error: action.payload.response.data,
         // value: {},
       };
     }

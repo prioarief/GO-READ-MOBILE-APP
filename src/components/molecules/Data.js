@@ -78,7 +78,7 @@ const Data = (props) => {
         return (
           <TouchableOpacity
             key={data.id}
-            onPress={() => AddData(type, data.id, data.book)}>
+            onPress={() => AddData(type, data.id, data.title)}>
             <ListItem
               containerStyle={styles.list}
               titleStyle={styles.item}

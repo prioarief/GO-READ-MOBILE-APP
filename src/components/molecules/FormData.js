@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import GenreForm from '../atoms/GenreForm';
 import AuthorForm from '../atoms/AuthorForm';
+import BookForm from '../atoms/BookForm';
 
 const FormData = (props) => {
   const Form = ({type}) => {
@@ -12,7 +13,7 @@ const FormData = (props) => {
       return <AuthorForm data={type} navigation={props.navigation} />;
     }
     if (type.type === 'Book') {
-      return <GenreForm data={type} navigation={props.navigation} />;
+      return <BookForm data={type} navigation={props.navigation} />;
     }
     return <Text>Not Found</Text>;
   };

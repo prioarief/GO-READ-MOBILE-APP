@@ -67,7 +67,7 @@ export const deleteBook = (token, id) => {
   };
 };
 export const editBook = (token, id, data) => {
-  // console.log(token)
+  console.log(data);
   return {
     type: 'EDIT',
     payload: axios({
