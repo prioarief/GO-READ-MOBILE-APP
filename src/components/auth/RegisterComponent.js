@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import {Register} from '../../redux/actions/auth';
 import {connect} from 'react-redux';
+import {showMessage} from 'react-native-flash-message';
 
 const RegisterComponent = ({navigation, screenName, dispatch}) => {
   const [user, setUser] = useState({email: '', password: '', name: ''});
@@ -18,33 +19,22 @@ const RegisterComponent = ({navigation, screenName, dispatch}) => {
     // console.log(data);
     dispatch(Register(data))
       .then((res) => {
-        console.log(res.value.status);
+        showMessage({
+          message: res.value.data.data.message,
+          type: 'success',
+          backgroundColor: 'green',
+          color: 'white',
+        });
         navigation.replace('Login');
       })
       .catch((err) => {
-        console.log(err.response.data.data);
+        showMessage({
+          message: err.response.data.data,
+          type: 'error',
+          backgroundColor: 'red',
+          color: 'white',
+        });
       });
-    // setLoading(true);
-    // setTimeout(() => {
-    //   axios({
-    //     method: 'POST',
-    //     url: 'http://192.168.43.81:3000/api/auth/register',
-    //     data: {
-    //       email: user.email,
-    //       name: user.password,
-    //       name: user.name,
-    //       role: 2,
-    //     },
-    //   })
-    //     .then((res) => {
-    //       console.log(res.data.data);
-    //       navigation.navigate(screenName);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err.response.data.data);
-    //     });
-    //   setLoading(false);
-    // }, 2000);
   };
   return (
     <>

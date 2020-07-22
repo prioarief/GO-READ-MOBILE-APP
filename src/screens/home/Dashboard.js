@@ -28,7 +28,9 @@ class Dashboard extends Component {
             <Text style={styles.dashboard}>Dashboard</Text>
             <Text style={styles.user}>Prio Arief Gunawan</Text>
           </View>
-          <TouchableOpacity style={styles.logout}>
+          <TouchableOpacity
+            style={styles.logout}
+            onPress={() => this.props.navigation.replace('Login')}>
             <Text style={styles.logouttext}>Logout</Text>
             <Icon name="sign-out-alt" size={20} color="white" />
           </TouchableOpacity>

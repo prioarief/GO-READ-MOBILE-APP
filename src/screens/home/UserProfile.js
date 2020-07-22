@@ -26,9 +26,7 @@ class UserProfile extends Component {
               showEditButton={true}
             />
           </View>
-          <Text style={styles.name}>
-            Prio Arief Gunawan Ganteng Sekali Geewla
-          </Text>
+          <Text style={styles.name}>{this.props.auth.data.name}</Text>
         </View>
         <View style={styles.content}>
           <TouchableOpacity>

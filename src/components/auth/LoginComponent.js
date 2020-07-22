@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
-import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
-import {Login} from '../../redux/actions/auth';
 import {connect} from 'react-redux';
+import {Login} from '../../redux/actions/auth';
 
 const LoginComponent = ({navigation, screenName, dispatch}) => {
   const [user, setUser] = useState({email: '', password: ''});
@@ -22,6 +22,13 @@ const LoginComponent = ({navigation, screenName, dispatch}) => {
         navigation.replace('MainApp');
       })
       .catch((err) => {
+        showMessage({
+          message: err.response.data.data,
+          type: 'error',
+          backgroundColor: 'red',
+          color: 'white',
+        });
+
         console.log(err.response.data.data);
       });
   };
@@ -32,6 +39,7 @@ const LoginComponent = ({navigation, screenName, dispatch}) => {
           Welcome Back
         </Text>
         <Input
+          importantForAutofill="yes"
           keyboardType="email-address"
           value={user.email}
           placeholder="Email Address"
