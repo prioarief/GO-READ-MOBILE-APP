@@ -4,7 +4,6 @@ import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {Chart, CardDashboard} from '../../components';
-import {dilan} from '../../assets';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -46,7 +45,7 @@ class Dashboard extends Component {
                   icon="book"
                   background="#0547ad"
                   color="white"
-                  total={20}
+                  total={this.props.book.count}
                   onPress={() => this.showData('Book')}
                 />
                 <CardDashboard
@@ -54,7 +53,7 @@ class Dashboard extends Component {
                   icon="tags"
                   background="red"
                   color="white"
-                  total={20}
+                  total={this.props.genre.value.length}
                   onPress={() => this.showData('Genre')}
                 />
                 <CardDashboard
@@ -62,7 +61,7 @@ class Dashboard extends Component {
                   icon="feather"
                   background="green"
                   color="white"
-                  total={20}
+                  total={this.props.author.value.length}
                   onPress={() => this.showData('Author')}
                 />
                 <CardDashboard
@@ -70,7 +69,7 @@ class Dashboard extends Component {
                   icon="users-cog"
                   background="purple"
                   color="white"
-                  total={20}
+                  total={this.props.genre.value.length}
                   onPress={() => this.showData('Admin')}
                 />
                 <CardDashboard
@@ -78,7 +77,7 @@ class Dashboard extends Component {
                   icon="users"
                   background="orange"
                   color="white"
-                  total={20}
+                  total={this.props.genre.value.length}
                   onPress={() => this.showData('User')}
                 />
                 <CardDashboard
@@ -86,7 +85,7 @@ class Dashboard extends Component {
                   icon="chart-line"
                   background="black"
                   color="white"
-                  total={20}
+                  total={this.props.genre.value.length}
                   onPress={() => this.showData('History')}
                 />
               </ScrollView>

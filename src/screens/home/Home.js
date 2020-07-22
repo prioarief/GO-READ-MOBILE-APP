@@ -55,7 +55,7 @@ class Home extends Component {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          this.props.navigation.replace('Login');
+          // this.props.navigation.replace('Login');
         }
       });
   };
@@ -68,7 +68,7 @@ class Home extends Component {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          this.props.navigation.replace('Login');
+          // this.props.navigation.replace('Login');
         }
       });
   };

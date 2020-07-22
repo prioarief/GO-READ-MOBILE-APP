@@ -1,9 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import {ListItem, Button} from 'react-native-elements';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {getBook} from '../../redux/actions/book';
+import {getGenre} from '../../redux/actions/genre';
+import {getAuthor} from '../../redux/actions/author';
 
 const Data = (props) => {
   const [Genre, setGenre] = useState(props.genre.value || '');
@@ -12,6 +16,24 @@ const Data = (props) => {
 
   const AddData = (type, id, name) => {
     props.navigate.navigate('FormData', {id: id, type: type, name: name});
+  };
+
+  const fetchBook = async () => {
+    await props.dispatch(getBook(props.auth.data.token)).then(async () => {
+      await setBook(props.book.value);
+    });
+  };
+
+  const fetchGenre = async () => {
+    await props.dispatch(getGenre(props.auth.data.token)).then(async () => {
+      await setGenre(props.genre.value);
+    });
+  };
+
+  const fetchAuthor = async () => {
+    await props.dispatch(getAuthor(props.auth.data.token)).then(async () => {
+      await setAuthor(props.author.value);
+    });
   };
 
   const FetchData = ({type}) => {
@@ -72,9 +94,11 @@ const Data = (props) => {
     return <Text>Not Found</Text>;
   };
 
-  // useEffect(() => {
-  //   setGenre(props.genre.value);
-  // }, [props.genre]);
+  useEffect(() => {
+    fetchBook();
+    fetchGenre();
+    fetchAuthor();
+  }, []);
 
   return (
     <View style={styles.container}>

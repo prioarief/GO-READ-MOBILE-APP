@@ -4,27 +4,28 @@ import {Button, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {
-  EditGenre,
-  getGenre,
-  deleteGenre,
-  insertGenre,
-} from '../../redux/actions/genre';
-import {getAuthor} from '../../redux/actions/author';
+  getAuthor,
+  deleteAuthor,
+  insertAuthor,
+  editAuthor,
+} from '../../redux/actions/author';
+import {getGenre} from '../../redux/actions/genre';
+import {getBook} from '../../redux/actions/book';
 
-const GenreForm = ({data, dispatch, auth, genre, navigation}) => {
-  const [Genre, setGenre] = useState(data.name || '');
+const AuthorForm = ({data, dispatch, auth, author, navigation}) => {
+  const [Author, setAuthor] = useState(data.name || '');
   const [Token] = useState(auth.data.token);
   const title = data.id === null ? true : false;
 
   const handleAdd = async () => {
-    const dataGenre = {
-      genre: Genre,
+    const dataAuthor = {
+      author: Author,
     };
-    await dispatch(insertGenre(Token, dataGenre))
+    await dispatch(insertAuthor(Token, dataAuthor))
       .then(async (res) => {
-        await dispatch(getGenre(Token)).then(async () => {
-          await dispatch(getAuthor(Token));
+        await dispatch(getAuthor(Token)).then(async () => {
           await dispatch(getGenre(Token));
+          await dispatch(getBook(Token));
           await navigation.navigate('MainApp');
         });
       })
@@ -34,10 +35,10 @@ const GenreForm = ({data, dispatch, auth, genre, navigation}) => {
   };
 
   const handleDelete = async () => {
-    await dispatch(deleteGenre(Token, data.id))
+    await dispatch(deleteAuthor(Token, data.id))
       .then(async (res) => {
-        await dispatch(getGenre(Token)).then(async () => {
-          await dispatch(getAuthor(Token));
+        await dispatch(getAuthor(Token)).then(async () => {
+          await dispatch(getBook(Token));
           await dispatch(getGenre(Token));
           await navigation.navigate('MainApp');
         });
@@ -48,13 +49,13 @@ const GenreForm = ({data, dispatch, auth, genre, navigation}) => {
   };
 
   const handleEdit = async () => {
-    const dataGenre = {
-      genre: Genre,
+    const dataAuthor = {
+      author: Author,
     };
-    await dispatch(EditGenre(Token, data.id, dataGenre))
+    await dispatch(editAuthor(Token, data.id, dataAuthor))
       .then(async (res) => {
-        await dispatch(getGenre(Token)).then(async () => {
-          await dispatch(getAuthor(Token));
+        await dispatch(getAuthor(Token)).then(async () => {
+          await dispatch(getBook(Token));
           await dispatch(getGenre(Token));
           await navigation.navigate('MainApp');
         });
@@ -70,10 +71,10 @@ const GenreForm = ({data, dispatch, auth, genre, navigation}) => {
         {title ? `Add ${data.type}` : `Edit ${data.type}`}
       </Text>
       <Input
-        value={Genre}
-        placeholder="Genre"
-        onChangeText={(input) => setGenre(input)}
-        leftIcon={<Icon name="tags" size={24} color="black" />}
+        value={Author}
+        placeholder="Author"
+        onChangeText={(input) => setAuthor(input)}
+        leftIcon={<Icon name="feather" size={24} color="black" />}
       />
       <Button
         title={title ? `Add ${data.type}` : `Edit ${data.type}`}
@@ -97,7 +98,7 @@ const mapStateToProps = (state) => ({
   genre: state.genre,
 });
 
-export default connect(mapStateToProps)(GenreForm);
+export default connect(mapStateToProps)(AuthorForm);
 
 const styles = StyleSheet.create({
   title: {
