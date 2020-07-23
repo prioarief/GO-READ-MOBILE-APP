@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View, ImageBackground} from 'react-native';
 import {Button} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import {Borrow} from '../../redux/actions/transaction';
 import {getBook} from '../../redux/actions/book';
 import Date from '../../utils/Date';
+import {showMessage} from 'react-native-flash-message';
 
 class DetailBook extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class DetailBook extends Component {
     this.state = {
       book: [],
       disable: true,
+      btn_loading: false,
     };
   }
   getDetailBook = async () => {
@@ -26,12 +28,20 @@ class DetailBook extends Component {
   };
 
   handleBorrow = async (id) => {
+    this.setState({btn_loading: true});
     await this.props
       .dispatch(Borrow(this.props.auth.data.token, id))
       .then(async (res) => {
         await this.props.dispatch(getBook(this.props.auth.data.token));
         await this.getDetailBook();
         await this.setDisable();
+        this.setState({btn_loading: false});
+        showMessage({
+          message: 'Borrow success',
+          type: 'success',
+          backgroundColor: 'green',
+          color: 'white',
+        });
         this.props.navigation.navigate('MainApp');
       });
   };
@@ -54,7 +64,12 @@ class DetailBook extends Component {
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          <View style={styles.main}>
+          <ImageBackground
+            style={styles.main}
+            blurRadius={1}
+            source={{
+              uri: `http://192.168.43.81:3000/images/${this.state.book.image}`,
+            }}>
             <Icon
               name="angle-left"
               style={styles.icon_back}
@@ -62,6 +77,8 @@ class DetailBook extends Component {
               color="black"
               onPress={() => this.props.navigation.replace('MainApp')}
             />
+          </ImageBackground>
+          <View style={styles.detail}>
             <View style={styles.content}>
               <Image
                 source={{
@@ -72,20 +89,6 @@ class DetailBook extends Component {
               <Text style={styles.title}>{this.state.book.title}</Text>
               <Text style={styles.author}>By {this.state.book.author}</Text>
             </View>
-          </View>
-          <View style={styles.detail}>
-            {!this.state.disable && (
-              <Button
-                title="BORROW"
-                icon={<Icon name="bookmark-o" size={24} color="white" />}
-                buttonStyle={styles.button_style}
-                titleStyle={styles.button_title}
-                containerStyle={styles.button}
-                onPress={async () => {
-                  this.handleBorrow(this.state.book.id);
-                }}
-              />
-            )}
             <Text style={styles.description_header}>Published At</Text>
             <Text style={styles.description}>
               {Date(this.state.book.created_at)}
@@ -96,6 +99,19 @@ class DetailBook extends Component {
             <Text style={styles.description}>
               {this.state.book.description}
             </Text>
+            {!this.state.disable && (
+              <Button
+                loading={this.state.btn_loading}
+                title="BORROW"
+                icon={<Icon name="bookmark-o" size={24} color="white" />}
+                buttonStyle={styles.button_style}
+                titleStyle={styles.button_title}
+                containerStyle={styles.button}
+                onPress={async () => {
+                  this.handleBorrow(this.state.book.id);
+                }}
+              />
+            )}
           </View>
         </View>
       </ScrollView>
@@ -118,25 +134,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   main: {
-    backgroundColor: '#e69c1c',
+    // backgroundColor: '#e69c1c',
+    height: 240,
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
   },
   icon_back: {padding: 20},
   content: {
     alignItems: 'center',
-    height: 380,
+    maxHeight: 400,
+    marginTop: -130,
+    marginBottom: 20,
+    // backgroundColor: '#e69c1c',
   },
   image: {
     width: 160,
     height: 220,
     borderRadius: 20,
-    shadowColor: 'red',
-    shadowOffset: {height: 12},
-    shadowOpacity: 1,
   },
   title: {
-    color: 'white',
+    color: 'black',
     fontSize: 27,
     marginTop: 10,
     maxWidth: 300,
@@ -159,7 +176,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   author: {
-    color: 'white',
+    color: 'black',
     fontSize: 18,
     margin: 2,
     maxWidth: 400,
@@ -173,7 +190,7 @@ const styles = StyleSheet.create({
   },
   detail: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#eaeaea',
     padding: 20,
   },
   button_style: {
@@ -181,7 +198,7 @@ const styles = StyleSheet.create({
     width: 250,
     borderRadius: 10,
   },
-  button: {alignItems: 'center', marginTop: -40},
+  button: {alignItems: 'center', marginVertical: 20},
   button_title: {paddingLeft: 10},
   button_disable: {
     backgroundColor: 'red',

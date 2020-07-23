@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import {getHistory, Return} from '../../redux/actions/transaction';
 import {ListHistory} from '../../components';
+import {showMessage} from 'react-native-flash-message';
 
 class History extends Component {
   constructor(props) {
@@ -29,8 +30,14 @@ class History extends Component {
   handleReturn = async (id) => {
     await this.props
       .dispatch(Return(this.state.token, id))
-      .then((res) => {
-        this.fetchHistory();
+      .then(async (res) => {
+        await this.fetchHistory();
+        showMessage({
+          message: 'return success',
+          type: 'success',
+          backgroundColor: 'green',
+          color: 'white',
+        });
         // this.setState({book: this.props.transaction.history});
       })
       .catch((err) => {

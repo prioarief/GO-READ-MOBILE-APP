@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import {showMessage} from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#eaeaea',
     justifyContent: 'center',
-    padding: 70,
+    padding: 50,
   },
   not: {
     fontSize: 12,

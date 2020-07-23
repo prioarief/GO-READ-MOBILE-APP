@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     paddingBottom: 10,
+    maxWidth: 150,
   },
   borrowed: {
     maxWidth: 200,

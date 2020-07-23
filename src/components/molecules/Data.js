@@ -83,6 +83,20 @@ const Data = (props) => {
               containerStyle={styles.list}
               titleStyle={styles.item}
               key={data.id}
+              leftAvatar={{
+                source: {uri: `http://192.168.43.81:3000/images/${data.image}`},
+              }}
+              subtitle={
+                data.description.length > 120
+                  ? `${data.description
+                      .split(' ')
+                      .join(' ')
+                      .slice(0, 120)}......`
+                  : `${data.description
+                      .split(' ')
+                      .join(' ')
+                      .slice(0, data.description.length)}`
+              }
               title={data.title}
               bottomDivider
             />

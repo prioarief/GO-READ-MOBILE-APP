@@ -1,16 +1,17 @@
 import React, {useState} from 'react';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
-import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
-import {Register} from '../../redux/actions/auth';
-import {connect} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
+import {Register} from '../../redux/actions/auth';
+import Loading from '../molecules/Loading';
 
 const RegisterComponent = ({navigation, screenName, dispatch}) => {
   const [user, setUser] = useState({email: '', password: '', name: ''});
-  const [Loading, setLoading] = useState(false);
+  const [ShowLoading, setLoading] = useState(false);
   const handleRegister = () => {
+    setLoading(true);
     const data = {
       email: user.email,
       password: user.password,
@@ -19,6 +20,7 @@ const RegisterComponent = ({navigation, screenName, dispatch}) => {
     // console.log(data);
     dispatch(Register(data))
       .then((res) => {
+        setLoading(false);
         showMessage({
           message: res.value.data.data.message,
           type: 'success',
@@ -28,6 +30,7 @@ const RegisterComponent = ({navigation, screenName, dispatch}) => {
         navigation.replace('Login');
       })
       .catch((err) => {
+        setLoading(false);
         showMessage({
           message: err.response.data.data,
           type: 'error',
@@ -55,7 +58,6 @@ const RegisterComponent = ({navigation, screenName, dispatch}) => {
           onChangeText={(input) => setUser({...user, email: input})}
           leftIcon={<Icon name="envelope" size={24} color="black" />}
         />
-        {Loading && <ActivityIndicator size="large" color="navy" />}
         <Input
           style={styles.input}
           placeholder="Password"
@@ -81,6 +83,7 @@ const RegisterComponent = ({navigation, screenName, dispatch}) => {
           Login
         </Text>
       </View>
+      {ShowLoading && <Loading />}
     </>
   );
 };

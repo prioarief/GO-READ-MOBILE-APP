@@ -37,7 +37,7 @@ const router = (props) => {
   };
 
   return (
-    <Stack.Navigator initialRouteName="MainApp">
+    <Stack.Navigator initialRouteName="Welcome">
       <Stack.Screen
         name="Welcome"
         component={Splash}

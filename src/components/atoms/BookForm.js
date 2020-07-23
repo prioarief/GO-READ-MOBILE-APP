@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {Picker} from '@react-native-community/picker';
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
+import {showMessage} from 'react-native-flash-message';
 import {ScrollView} from 'react-native-gesture-handler';
-import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
+import {connect} from 'react-redux';
 import {getAuthor} from '../../redux/actions/author';
 import {
   deleteBook,
@@ -14,15 +15,17 @@ import {
   insertBook,
 } from '../../redux/actions/book';
 import {getGenre} from '../../redux/actions/genre';
+import Loading from '../molecules/Loading';
 
 const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
+  const [showLoading, setLoading] = useState(false);
   const [Book, setBook] = useState({
-    title: '',
-    description: '',
+    title: null,
+    description: null,
     image: null,
     genre_id: null,
     author_id: null,
-    status: '',
+    status: null,
   });
   const [Genre, setGenre] = useState(genre.value || '');
   const [Author, setAuthor] = useState(author.value || '');
@@ -45,17 +48,35 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
   };
 
   const handleAdd = async () => {
+    setLoading(true);
     const dataBook = new FormData();
     dataBook.append('title', Book.title);
     dataBook.append('description', Book.description);
-    dataBook.append('image', {
-      uri: Book.image.uri,
-      type: Book.image.type,
-      name: Book.image.fileName,
-    });
+    Book.image !== null
+      ? dataBook.append('image', {
+          uri: Book.image.uri,
+          type: Book.image.type,
+          name: Book.image.fileName,
+        })
+      : null;
     dataBook.append('genre_id', Book.genre_id);
     dataBook.append('author_id', Book.author_id);
     dataBook.append('status', 'Available');
+    if (
+      Book.title === null ||
+      Book.description === null ||
+      Book.genre_id === null ||
+      Book.author_id === null ||
+      Book.image === null
+    ) {
+      setLoading(false);
+      return showMessage({
+        message: 'Something Wrong',
+        type: 'error',
+        backgroundColor: 'red',
+        color: 'white',
+      });
+    }
 
     await dispatch(getAuthor(Token)).then(async () => {
       await setAuthor(author.value);
@@ -68,6 +89,7 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
         await dispatch(getBook(Token)).then(async () => {
           await dispatch(getAuthor(Token));
           await dispatch(getGenre(Token));
+          setLoading(false);
           await navigation.navigate('MainApp');
         });
       })
@@ -77,6 +99,7 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
   };
 
   const handleDelete = async () => {
+    setLoading(true);
     await dispatch(getAuthor(Token)).then(async () => {
       await setAuthor(author.value);
     });
@@ -88,6 +111,7 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
         await dispatch(getBook(Token)).then(async () => {
           await dispatch(getAuthor(Token));
           await dispatch(getGenre(Token));
+          setLoading(false);
           await navigation.navigate('MainApp');
         });
       })
@@ -97,12 +121,13 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
   };
 
   const handleEdit = async () => {
+    setLoading(true);
     // console.log(typeof Book.image);
     const dataBook = new FormData();
     dataBook.append('title', Book.title);
     dataBook.append('description', Book.description);
-    typeof Book.image === 'String'
-      ? dataBook.append('image', Book.image)
+    typeof Book.image === 'string'
+      ? null
       : dataBook.append('image', {
           uri: Book.image.uri,
           type: Book.image.type,
@@ -123,6 +148,7 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
         await dispatch(getBook(Token)).then(async () => {
           await dispatch(getAuthor(Token));
           await dispatch(getGenre(Token));
+          setLoading(false);
           await navigation.navigate('MainApp');
         });
       })
@@ -143,7 +169,7 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
     const options = {
       noData: true,
     };
-    ImagePicker.launchImageLibrary(options, (response) => {
+    ImagePicker.showImagePicker(options, (response) => {
       if (response.uri) {
         setBook({...Book, image: response});
       }
@@ -155,88 +181,93 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
   }, []);
 
   return (
-    <View>
-      <ScrollView>
-        <Text style={styles.title}>
-          {title ? `Add ${data.type}` : `Edit ${data.type}`}
-        </Text>
-        <Input
-          value={Book.title}
-          placeholder="Title"
-          onChangeText={(input) => setBook({...Book, title: input})}
-        />
+    <>
+      <View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={styles.title}>
+            {title ? `Add ${data.type}` : `Edit ${data.type}`}
+          </Text>
+          <Text style={styles.label}>Title</Text>
+          <Input
+            value={Book.title}
+            placeholder="Title"
+            onChangeText={(input) => setBook({...Book, title: input})}
+          />
 
-        <Text style={styles.sort_header}>Genre</Text>
-        <Picker
-          mode="dropdown"
-          selectedValue={Book.genre_id}
-          style={styles.sort_dropdown}
-          onValueChange={(itemValue) => handleGenre(itemValue)}>
-          <Picker.Item label="Select Genre" value={null} />
-          {Genre ? (
-            Genre.map((a) => {
-              return <Picker.Item key={a.id} label={a.genre} value={a.id} />;
-            })
-          ) : (
+          <Text style={styles.label}>Genre</Text>
+          <Picker
+            mode="dropdown"
+            selectedValue={Book.genre_id}
+            style={styles.sort_dropdown}
+            onValueChange={(itemValue) => handleGenre(itemValue)}>
             <Picker.Item label="Select Genre" value={null} />
-          )}
-        </Picker>
+            {Genre ? (
+              Genre.map((a) => {
+                return <Picker.Item key={a.id} label={a.genre} value={a.id} />;
+              })
+            ) : (
+              <Picker.Item label="Select Genre" value={null} />
+            )}
+          </Picker>
 
-        <Text style={styles.sort_header}>Author</Text>
-        <Picker
-          mode="dropdown"
-          selectedValue={Book.author_id}
-          style={styles.sort_dropdown}
-          onValueChange={(itemValue) => handleAuthor(itemValue)}>
-          <Picker.Item label="Select Author" value={null} />
-          {Author ? (
-            Author.map((a) => {
-              return <Picker.Item key={a.id} label={a.author} value={a.id} />;
-            })
-          ) : (
+          <Text style={styles.label}>Author</Text>
+          <Picker
+            mode="dropdown"
+            selectedValue={Book.author_id}
+            style={styles.sort_dropdown}
+            onValueChange={(itemValue) => handleAuthor(itemValue)}>
             <Picker.Item label="Select Author" value={null} />
+            {Author ? (
+              Author.map((a) => {
+                return <Picker.Item key={a.id} label={a.author} value={a.id} />;
+              })
+            ) : (
+              <Picker.Item label="Select Author" value={null} />
+            )}
+          </Picker>
+
+          <Text style={styles.label}>Description</Text>
+          <Input
+            placeholder="Description"
+            value={Book.description}
+            onChangeText={(input) => setBook({...Book, description: input})}
+          />
+
+          {Book.image && (
+            <Image
+              source={{
+                uri:
+                  Book.image.uri ||
+                  `http://192.168.43.81:3000/images/${Book.image}`,
+              }}
+              style={styles.image}
+            />
           )}
-        </Picker>
 
-        <Input
-          placeholder="Description"
-          value={Book.description}
-          onChangeText={(input) => setBook({...Book, description: input})}
-        />
-
-        {Book.image && (
-          <Image
-            source={{
-              uri:
-                Book.image.uri ||
-                `http://192.168.43.81:3000/images/${Book.image}`,
-            }}
-            style={{width: 300, height: 300}}
-          />
-        )}
-
-        <Button
-          title="Select Image"
-          containerStyle={{width: 150, marginVertical: 20}}
-          buttonStyle={{backgroundColor: 'black'}}
-          onPress={() => handleImage()}
-        />
-
-        <Button
-          title={title ? `Add ${data.type}` : `Edit ${data.type}`}
-          onPress={() => (title ? handleAdd() : handleEdit())}
-        />
-
-        {!title && (
           <Button
-            containerStyle={styles.containerButton}
-            buttonStyle={styles.button_delete}
-            title="Delete"
-            onPress={() => handleDelete()}
+            title="Choose Image"
+            containerStyle={styles.buttonImage}
+            buttonStyle={styles.button}
+            onPress={() => handleImage()}
           />
-        )}
-      </ScrollView>
-    </View>
+
+          <Button
+            title={title ? `Add ${data.type}` : `Edit ${data.type}`}
+            onPress={() => (title ? handleAdd() : handleEdit())}
+          />
+
+          {!title && (
+            <Button
+              containerStyle={styles.containerButton}
+              buttonStyle={styles.button_delete}
+              title="Delete"
+              onPress={() => handleDelete()}
+            />
+          )}
+        </ScrollView>
+      </View>
+      {showLoading && <Loading />}
+    </>
   );
 };
 
@@ -258,4 +289,12 @@ const styles = StyleSheet.create({
   },
   button_delete: {backgroundColor: 'red'},
   containerButton: {marginTop: 10},
+  button: {backgroundColor: '#828487'},
+  label: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttonImage: {width: 120, marginVertical: 20},
+  image: {width: 300, height: 300},
 });
