@@ -5,12 +5,14 @@ import {showMessage} from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {Login} from '../../redux/actions/auth';
+import Loading from '../molecules/Loading';
 
 const LoginComponent = ({navigation, screenName, dispatch}) => {
   const [user, setUser] = useState({email: '', password: ''});
-  const [Loading, setLoading] = useState(false);
+  const [ShowLoading, setLoading] = useState(false);
   const handleLogin = () => {
     // console.log(dispatch());
+    setLoading(true);
     const data = {
       email: user.email,
       password: user.password,
@@ -18,10 +20,12 @@ const LoginComponent = ({navigation, screenName, dispatch}) => {
     // console.log(data);
     dispatch(Login(data))
       .then((res) => {
+        setLoading(false);
         console.log(res.value.status);
         navigation.replace('MainApp');
       })
       .catch((err) => {
+        setLoading(false);
         showMessage({
           message: err.response.data.data,
           type: 'error',
@@ -46,7 +50,6 @@ const LoginComponent = ({navigation, screenName, dispatch}) => {
           onChangeText={(input) => setUser({...user, email: input})}
           leftIcon={<Icon name="envelope" size={24} color="black" />}
         />
-        {Loading && <ActivityIndicator size="large" color="navy" />}
         <Input
           style={styles.input}
           placeholder="Password"
@@ -72,6 +75,7 @@ const LoginComponent = ({navigation, screenName, dispatch}) => {
           Register
         </Text>
       </View>
+      {ShowLoading && <Loading />}
     </>
   );
 };

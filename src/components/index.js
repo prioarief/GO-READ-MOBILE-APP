@@ -10,6 +10,7 @@ import CardDashboard from './molecules/CardDashboard';
 import Data from './molecules/Data';
 import FormData from './molecules/FormData';
 import GenreForm from './atoms/GenreForm';
+import Loading from './molecules/Loading';
 
 export {
   LoginComponent,
@@ -24,4 +25,5 @@ export {
   FormData,
   Data,
   GenreForm,
+  Loading,
 };

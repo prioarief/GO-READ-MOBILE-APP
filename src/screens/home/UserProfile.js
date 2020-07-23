@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Avatar, ListItem, Overlay} from 'react-native-elements';
+import {Avatar, ListItem} from 'react-native-elements';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {dilan} from '../../assets';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 class UserProfile extends Component {
   constructor(props) {
