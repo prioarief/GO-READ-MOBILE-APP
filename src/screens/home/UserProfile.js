@@ -5,6 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
 import {dilan} from '../../assets';
+import Date from '../../utils/Date';
 
 class UserProfile extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class UserProfile extends Component {
     this.state = {
       modal: false,
     };
+    console.log(props);
   }
   render() {
     return (
@@ -27,6 +29,9 @@ class UserProfile extends Component {
             />
           </View>
           <Text style={styles.name}>{this.props.auth.data.name}</Text>
+          <Text style={styles.join}>
+            {`Member since ${Date(this.props.auth.data.created_at)}`}
+          </Text>
         </View>
         <View style={styles.content}>
           <TouchableOpacity>
@@ -109,9 +114,15 @@ const styles = StyleSheet.create({
     borderRadius: 120 / 2,
   },
   name: {
-    paddingVertical: 15,
+    paddingTop: 15,
     fontSize: 20,
     fontWeight: 'bold',
+    maxWidth: 250,
+    textAlign: 'center',
+  },
+  join: {
+    // paddingVertical: 15,
+    fontSize: 15,
     maxWidth: 250,
     textAlign: 'center',
   },
