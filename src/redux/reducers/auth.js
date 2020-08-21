@@ -15,7 +15,7 @@ const auth = (state = inialState, action) => {
     case 'LOGIN_REJECTED': {
       return {
         ...state,
-        errorMessage: action.payload.response.data.data,
+        errorMessage: action.payload,
       };
     }
     case 'LOGIN_FULFILLED': {

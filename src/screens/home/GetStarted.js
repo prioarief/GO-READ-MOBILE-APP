@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import {cover} from '../../assets';
+import {APP_API_URL} from '@env';
 
 export default class GetStarted extends Component {
   constructor(props) {

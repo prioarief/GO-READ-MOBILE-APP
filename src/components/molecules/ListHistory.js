@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import Date from '../../utils/Date';
+import {APP_API_URL} from '@env';
 
 const ListHistory = ({onPress, title, borrowed, returned, image}) => {
   const Content = ({status}) => {
@@ -30,7 +31,7 @@ const ListHistory = ({onPress, title, borrowed, returned, image}) => {
     <View style={styles.container}>
       <Image
         source={{
-          uri: `http://192.168.43.81:3000/images/${image}`,
+          uri: `${APP_API_URL}/images/${image}`,
         }}
         style={styles.img}
       />

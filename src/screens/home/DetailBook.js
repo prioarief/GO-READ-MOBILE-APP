@@ -8,6 +8,7 @@ import {Borrow} from '../../redux/actions/transaction';
 import {getBook} from '../../redux/actions/book';
 import Date from '../../utils/Date';
 import {showMessage} from 'react-native-flash-message';
+import {APP_API_URL} from '@env';
 
 class DetailBook extends Component {
   constructor(props) {
@@ -68,7 +69,7 @@ class DetailBook extends Component {
             style={styles.main}
             blurRadius={1}
             source={{
-              uri: `http://192.168.43.81:3000/images/${this.state.book.image}`,
+              uri: `${APP_API_URL}/images/${this.state.book.image}`,
             }}>
             <Icon
               name="angle-left"
@@ -82,7 +83,7 @@ class DetailBook extends Component {
             <View style={styles.content}>
               <Image
                 source={{
-                  uri: `http://192.168.43.81:3000/images/${this.state.book.image}`,
+                  uri: `${APP_API_URL}/images/${this.state.book.image}`,
                 }}
                 style={styles.image}
               />

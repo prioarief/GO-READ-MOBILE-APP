@@ -2,6 +2,7 @@ const inialState = {
   value: [],
   detail: {},
   errosMsg: null,
+  isLoading: false,
 };
 
 const author = (state = inialState, action) => {
@@ -10,6 +11,7 @@ const author = (state = inialState, action) => {
       return {
         ...state,
         errorMsg: null,
+        isLoading: true,
         value: {},
       };
     }
@@ -18,6 +20,7 @@ const author = (state = inialState, action) => {
       return {
         ...state,
         errorMsg: action.payload,
+        isLoading: false,
         value: {},
       };
     }
@@ -25,6 +28,7 @@ const author = (state = inialState, action) => {
       return {
         ...state,
         errorMsg: null,
+        isLoading: false,
         value: action.payload.data.data,
       };
     }

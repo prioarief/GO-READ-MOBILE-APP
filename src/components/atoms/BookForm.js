@@ -16,6 +16,7 @@ import {
 } from '../../redux/actions/book';
 import {getGenre} from '../../redux/actions/genre';
 import Loading from '../molecules/Loading';
+import {APP_API_URL} from '@env';
 
 const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
   const [showLoading, setLoading] = useState(false);
@@ -90,6 +91,12 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
           await dispatch(getAuthor(Token));
           await dispatch(getGenre(Token));
           setLoading(false);
+          showMessage({
+            message: 'Successfull inserted',
+            type: 'success',
+            backgroundColor: 'green',
+            color: 'white',
+          });
           await navigation.navigate('MainApp');
         });
       })
@@ -236,9 +243,7 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
           {Book.image && (
             <Image
               source={{
-                uri:
-                  Book.image.uri ||
-                  `http://192.168.43.81:3000/images/${Book.image}`,
+                uri: Book.image.uri || `${APP_API_URL}/images/${Book.image}`,
               }}
               style={styles.image}
             />
@@ -254,6 +259,7 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
           <Button
             title={title ? `Add ${data.type}` : `Edit ${data.type}`}
             onPress={() => (title ? handleAdd() : handleEdit())}
+            loading={showLoading}
           />
 
           {!title && (
@@ -266,7 +272,6 @@ const BookForm = ({data, dispatch, auth, book, genre, author, navigation}) => {
           )}
         </ScrollView>
       </View>
-      {showLoading && <Loading />}
     </>
   );
 };

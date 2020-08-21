@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {API} from '@env';
+import {APP_API_URL} from '@env';
 
 export const Borrow = (token, id) => {
   return {
     type: 'BORROW',
     payload: axios({
       method: 'GET',
-      url: `${API}/transaction/borrow/${id}`,
+      url: `${APP_API_URL}/api/transaction/borrow/${id}`,
       headers: {
         Authorization: token,
       },
@@ -19,7 +19,7 @@ export const Return = (token, id) => {
     type: 'RETURN',
     payload: axios({
       method: 'GET',
-      url: `${API}/transaction/return/${id}`,
+      url: `${APP_API_URL}/api/transaction/return/${id}`,
       headers: {
         Authorization: token,
       },
@@ -32,7 +32,7 @@ export const getHistory = (token) => {
     type: 'HISTORY',
     payload: axios({
       method: 'POST',
-      url: `${API}/transaction/history`,
+      url: `${APP_API_URL}/api/transaction/history`,
       headers: {
         Authorization: token,
       },

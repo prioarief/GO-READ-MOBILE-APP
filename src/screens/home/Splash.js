@@ -6,9 +6,6 @@ import {Logo} from '../../assets';
 class Splash extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   getStarted: null,
-    // };
   }
 
   componentDidMount() {

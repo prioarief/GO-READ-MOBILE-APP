@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {getBook} from '../../redux/actions/book';
 import {getGenre} from '../../redux/actions/genre';
 import {getAuthor} from '../../redux/actions/author';
+import {APP_API_URL} from '@env';
 
 const Data = (props) => {
   const [Genre, setGenre] = useState(props.genre.value || '');
@@ -84,7 +85,7 @@ const Data = (props) => {
               titleStyle={styles.item}
               key={data.id}
               leftAvatar={{
-                source: {uri: `http://192.168.43.81:3000/images/${data.image}`},
+                source: {uri: `${APP_API_URL}/images/${data.image}`},
               }}
               subtitle={
                 data.description.length > 120
@@ -123,6 +124,7 @@ const Data = (props) => {
           icon={<Icon name="folder-plus" size={24} color="white" />}
           onPress={() => AddData(props.type, null)}
         />
+
         <FetchData type={props.type} />
       </ScrollView>
     </View>

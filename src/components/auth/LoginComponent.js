@@ -6,18 +6,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import {Login} from '../../redux/actions/auth';
 import Loading from '../molecules/Loading';
+import {APP_API_URL} from '@env';
 
-const LoginComponent = ({navigation, screenName, dispatch}) => {
+const LoginComponent = ({navigation, screenName, dispatch, auth}) => {
   const [user, setUser] = useState({email: '', password: ''});
   const [ShowLoading, setLoading] = useState(false);
   const handleLogin = () => {
-    // console.log(dispatch());
     setLoading(true);
     const data = {
       email: user.email,
       password: user.password,
     };
-    // console.log(data);
     dispatch(Login(data))
       .then((res) => {
         setLoading(false);
@@ -26,14 +25,21 @@ const LoginComponent = ({navigation, screenName, dispatch}) => {
       })
       .catch((err) => {
         setLoading(false);
+        if (auth.errorMessage.message === 'Network Error') {
+          return showMessage({
+            message: 'Please check your connection',
+            type: 'error',
+            backgroundColor: 'red',
+            color: 'white',
+          });
+        }
+
         showMessage({
           message: err.response.data.data,
           type: 'error',
           backgroundColor: 'red',
           color: 'white',
         });
-
-        console.log(err.response.data.data);
       });
   };
   return (
@@ -116,6 +122,7 @@ const styles = StyleSheet.create({
   },
 });
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   book: state.book,
 });
 

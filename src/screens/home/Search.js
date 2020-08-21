@@ -2,32 +2,27 @@ import {APP_API_URL} from '@env';
 import {Picker} from '@react-native-community/picker';
 import React, {Component} from 'react';
 import {
-  ActivityIndicator,
   ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import {Text as Heading, Button} from 'react-native-elements';
+import {SearchBar, Text as Heading} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {cover} from '../../assets';
 import {Card, Loading} from '../../components';
-import {getAuthor} from '../../redux/actions/author';
 import {getBook} from '../../redux/actions/book';
-import {getGenre} from '../../redux/actions/genre';
 
-class Home extends Component {
+class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      book: this.props.book.value || 'Data not found',
+      book: '',
       keyword: '',
       page: 1,
       sort: 'latest',
       loading: false,
-      thisPage: 1,
-      totalPage: 0,
     };
   }
   isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -37,6 +32,7 @@ class Home extends Component {
       contentSize.height - paddingToBottom
     );
   };
+
   fetchBook = async (search, sort, page) => {
     await this.props
       .dispatch(getBook(this.props.auth.data.token, search, sort, page))
@@ -50,71 +46,6 @@ class Home extends Component {
       });
   };
 
-  fetchAuthor = async () => {
-    await this.props
-      .dispatch(getAuthor(this.props.auth.data.token))
-      .then((res) => {
-        this.setState({book: this.props.book.value});
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          // this.props.navigation.replace('Login');
-        }
-      });
-  };
-
-  fetchGenre = async () => {
-    await this.props
-      .dispatch(getGenre(this.props.auth.data.token))
-      .then((res) => {
-        this.setState({book: this.props.book.value});
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          // this.props.navigation.replace('Login');
-        }
-      });
-  };
-
-  createPagination = async () => {
-    let dataLength = this.props.book.count;
-    let totalPage = Math.ceil(dataLength / 6);
-    await this.setState({totalPage: totalPage});
-  };
-
-  LoadMore = async () => {
-    await this.props
-      .dispatch(
-        getBook(
-          this.props.auth.data.token,
-          null,
-          null,
-          this.state.thisPage + 1,
-        ),
-      )
-      .then((res) => {
-        const data = res.value.data.data;
-        data.map((a) => {
-          return this.setState({
-            book: [...this.state.book, a],
-            thisPage: this.state.thisPage + 1,
-          });
-        });
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          this.props.navigation.replace('Login');
-        }
-      });
-  };
-
-  componentDidMount() {
-    this.fetchBook();
-    this.fetchGenre();
-    this.fetchAuthor();
-    this.createPagination();
-  }
-
   handleSort = async (itemValue) => {
     await this.setState({sort: itemValue});
     this.fetchBook(this.state.keyword, this.state.sort).then(() => {
@@ -123,7 +54,9 @@ class Home extends Component {
   };
 
   handleSearch = () => {
+    this.setState({loading: true});
     this.fetchBook(this.state.keyword).then(() => {
+      this.setState({loading: false});
       this.setState({book: this.props.book.value});
     });
   };
@@ -131,7 +64,22 @@ class Home extends Component {
     return (
       <>
         <View style={styles.container}>
-          <ImageBackground source={cover} style={styles.background} />
+          <ImageBackground source={cover} style={styles.background}>
+            <SearchBar
+              placeholder="Type here"
+              inputContainerStyle={styles.search_input}
+              containerStyle={styles.search}
+              value={this.state.keyword}
+              onChangeText={(keyword) => this.setState({keyword: keyword})}
+              lightTheme={true}
+              round={true}
+              onClear={() => this.setState({book: ''})}
+              showLoading={true}
+              onBlur={() => {
+                this.handleSearch();
+              }}
+            />
+          </ImageBackground>
           <View style={styles.content}>
             <ScrollView
               showsVerticalScrollIndicator={false}
@@ -142,20 +90,22 @@ class Home extends Component {
               }}
               scrollEventThrottle={200}>
               <Text style={styles.title}>Book List</Text>
-              <View style={styles.sort}>
-                <Text style={styles.sort_header}>Sort</Text>
-                <Picker
-                  mode="dropdown"
-                  selectedValue={this.state.sort}
-                  style={styles.sort_dropdown}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.handleSort(itemValue)
-                  }>
-                  <Picker.Item label="Latest" value="latest" />
-                  <Picker.Item label="A-Z" value="title-asc" />
-                  <Picker.Item label="Z-A" value="title-desc" />
-                </Picker>
-              </View>
+              {this.state.book !== '' && this.state.book !== 'Data not found' && (
+                <View style={styles.sort}>
+                  <Text style={styles.sort_header}>Sort</Text>
+                  <Picker
+                    mode="dropdown"
+                    selectedValue={this.state.sort}
+                    style={styles.sort_dropdown}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.handleSort(itemValue)
+                    }>
+                    <Picker.Item label="Latest" value="latest" />
+                    <Picker.Item label="A-Z" value="title-asc" />
+                    <Picker.Item label="Z-A" value="title-desc" />
+                  </Picker>
+                </View>
+              )}
               {this.state.book !== 'Data not found' ? (
                 this.state.book ? (
                   this.state.book.map((data) => {
@@ -179,31 +129,21 @@ class Home extends Component {
                   Not Found
                 </Heading>
               )}
-              {this.state.loading && (
-                <ActivityIndicator size="large" color="red" />
-              )}
-              {this.state.thisPage < this.state.totalPage && (
-                <View style={styles.load}>
-                  <Button title="Load More" onPress={() => this.LoadMore()} />
-                </View>
-              )}
             </ScrollView>
           </View>
         </View>
-        {this.props.book.isLoading && <Loading />}
+        {this.state.loading && <Loading />}
       </>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth,
-  author: state.author,
   book: state.book,
-  ggenre: state.ggenre,
+  auth: state.auth,
 });
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(Search);
 
 const styles = StyleSheet.create({
   container: {
@@ -258,9 +198,4 @@ const styles = StyleSheet.create({
   sort_dropdown: {height: 50, width: 140, marginLeft: 30},
   sort_header: {marginTop: 15},
   notfound: {textAlign: 'center', color: 'red'},
-  load: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 20,
-  },
 });

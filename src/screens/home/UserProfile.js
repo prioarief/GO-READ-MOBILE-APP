@@ -4,7 +4,7 @@ import {Avatar, ListItem} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {connect} from 'react-redux';
-import {dilan} from '../../assets';
+import {user} from '../../assets';
 import Date from '../../utils/Date';
 
 class UserProfile extends Component {
@@ -23,7 +23,7 @@ class UserProfile extends Component {
             <Avatar
               showAccessory={true}
               rounded
-              source={dilan}
+              source={user}
               size={120}
               showEditButton={true}
             />
@@ -40,6 +40,7 @@ class UserProfile extends Component {
               key={3}
               leftIcon={<Icon name="user-cog" size={20} color="black" />}
               title="Edit Profile"
+              rightSubtitle="Coming soon"
               bottomDivider
             />
           </TouchableOpacity>

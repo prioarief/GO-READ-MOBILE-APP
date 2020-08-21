@@ -12,6 +12,7 @@ import {
   DetailBook,
   UserProfile,
   Manage,
+  Search,
 } from '../screens';
 import {BottomNavigator, FormData} from '../components';
 import {connect} from 'react-redux';
@@ -25,7 +26,7 @@ const router = (props) => {
       <Tab.Navigator
         tabBar={(data) => <BottomNavigator {...data} key={data} />}>
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Search" component={History} />
+        <Tab.Screen name="Search" component={Search} />
         {props.auth.data.role === 'Admin' && (
           <Tab.Screen name="Dashboard" component={Dashboard} />
         )}

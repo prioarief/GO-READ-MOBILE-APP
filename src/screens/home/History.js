@@ -38,7 +38,6 @@ class History extends Component {
           backgroundColor: 'green',
           color: 'white',
         });
-        // this.setState({book: this.props.transaction.history});
       })
       .catch((err) => {
         console.log(err);

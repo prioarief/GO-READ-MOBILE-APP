@@ -1,11 +1,12 @@
 import axios from 'axios';
+import {APP_API_URL} from '@env';
 
 export const Login = (data) => {
   return {
     type: 'LOGIN',
     payload: axios({
       method: 'POST',
-      url: 'http://192.168.43.81:3000/api/auth/login',
+      url: `${APP_API_URL}/api/auth/login`,
       data: {
         email: data.email,
         password: data.password,
@@ -19,7 +20,7 @@ export const Register = (data) => {
     type: 'REGISTER',
     payload: axios({
       method: 'POST',
-      url: 'http://192.168.43.81:3000/api/auth/register',
+      url: `${APP_API_URL}/api/auth/register`,
       data: {
         email: data.email,
         password: data.password,
@@ -35,7 +36,7 @@ export const Activation = (data) => {
     type: 'ACTIVATION',
     payload: axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/auth/activation',
+      url: `http://localhost:3000/api/auth/activation`,
       data: {
         email: data.email,
         code: data.code,

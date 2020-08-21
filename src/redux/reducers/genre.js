@@ -3,6 +3,7 @@ const inialState = {
   detail: {},
   // data: [],
   errosMsg: null,
+  isLoading: false,
 };
 
 const genre = (state = inialState, action) => {
@@ -11,6 +12,7 @@ const genre = (state = inialState, action) => {
       return {
         ...state,
         errorMsg: null,
+        isLoading: true,
         value: {},
       };
     }
@@ -18,6 +20,7 @@ const genre = (state = inialState, action) => {
       console.log(action.payload);
       return {
         ...state,
+        isLoading: false,
         errorMsg: action.payload,
         value: {},
       };
@@ -27,6 +30,7 @@ const genre = (state = inialState, action) => {
         ...state,
 
         // errorMsg: null,
+        isLoading: false,
         value: action.payload.data.data,
       };
     }

@@ -8,6 +8,7 @@ import DetailBook from './home/DetailBook';
 import Dashboard from './home/Dashboard';
 import UserProfile from './home/UserProfile';
 import Manage from './home/Manage';
+import Search from './home/Search';
 
 export {
   LoginComponent,
@@ -20,4 +21,5 @@ export {
   Dashboard,
   UserProfile,
   Manage,
+  Search,
 };

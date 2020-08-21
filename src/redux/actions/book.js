@@ -1,14 +1,12 @@
 import axios from 'axios';
-import {API} from '@env';
+import {APP_API_URL} from '@env';
 
 export const getBook = (token, search, sort, page, by) => {
-  // console.log(API);
   return {
     type: 'BOOK',
     payload: axios({
       method: 'GET',
-      url: `${API}/books`,
-      // url: 'http://192.168.43.81:3000/api/books',
+      url: `${APP_API_URL}/api/books`,
       params: {
         search: search,
         // show: show || 6,
@@ -29,7 +27,7 @@ export const insertBook = (token, data) => {
     type: 'INSERT',
     payload: axios({
       method: 'POST',
-      url: `${API}/books`,
+      url: `${APP_API_URL}/api/books`,
       data: data,
       headers: {
         Authorization: token,
@@ -45,7 +43,7 @@ export const detailBook = (token, id) => {
     type: 'DETAIL',
     payload: axios({
       method: 'GET',
-      url: `http://192.168.43.81:3000/api/books/${id}`,
+      url: `${APP_API_URL}/api/books/${id}`,
       headers: {
         Authorization: token,
       },
@@ -59,7 +57,7 @@ export const deleteBook = (token, id) => {
     type: 'DELETE',
     payload: axios({
       method: 'DELETE',
-      url: `${API}/books/${id}`,
+      url: `${APP_API_URL}/api/books/${id}`,
       headers: {
         Authorization: token,
       },
@@ -72,7 +70,7 @@ export const editBook = (token, id, data) => {
     type: 'EDIT',
     payload: axios({
       method: 'PUT',
-      url: `${API}/books/${id}`,
+      url: `${APP_API_URL}/api/books/${id}`,
       data: data,
       headers: {
         Authorization: token,
