@@ -18,7 +18,7 @@
     "@react-navigation/stack": "^5.7.0",
     "axios": "^0.19.2",
     "babel-plugin-dotenv-import": "^2.1.0",
-    "moment": "^2.27.0",
+    "moment": "^2.29.2",
     "react": "16.13.1",
     "react-native": "0.63.0",
     "react-native-chart-kit": "^6.4.1",
